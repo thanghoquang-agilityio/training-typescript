@@ -1,0 +1,48 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "Brand Name 1",
+      "display_image": "link",
+      "category": "Drama",
+      "release_year": 2023,
+      "rating": 7.4,
+      "video": "link",
+      "video_duration": "2h 14m",
+      "description": "Product description here 1"
+    },
+    {
+      "id": 2,
+      "title": "Brand Name 1",
+      "display_image": "link",
+      "category": "Drama",
+      "release_year": 2023,
+      "rating": 7.4,
+      "video": "link",
+      "video_duration": "2h 14m",
+      "description": "Product description here 1"
+    },
+    {
+      "id": 3,
+      "title": "Brand Name 1",
+      "display_image": "link",
+      "category": "Drama",
+      "release_year": 2023,
+      "rating": 7.4,
+      "video": "link",
+      "video_duration": "2h 14m",
+      "description": "Product description here 1"
+    },
+    {
+      "id": 4,
+      "title": "Brand Name 1",
+      "display_image": "link",
+      "category": "Drama",
+      "release_year": 2023,
+      "rating": 7.4,
+      "video": "link",
+      "video_duration": "2h 14m",
+      "description": "Product description here 1"
+    }
+  ]
+}
