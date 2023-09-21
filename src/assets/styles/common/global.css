@@ -1,0 +1,18 @@
+html {
+  font-size: 16px;
+}
+
+a {
+  text-decoration: none;
+}
+
+a,
+picture {
+  display: inline-block;
+}
+
+body {
+  background-color: rgba(34, 31, 29, 255);
+  max-width: 1440px;
+  margin: auto;
+}

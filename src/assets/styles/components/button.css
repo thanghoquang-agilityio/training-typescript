@@ -1,0 +1,53 @@
+.button-heart-movie {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  border: 1px solid var(--white-color);
+  background: linear-gradient(99deg, var(--white-color) 3.36%, rgba(255, 255, 255, 0) 238.16%);
+  backdrop-filter: blur(6px);
+}
+
+.button-heart-card {
+  width: 37px;
+  height: 37px;
+  border-radius: 8px;
+  border: 1px solid var(--white-color);
+  background: linear-gradient(99deg, var(--white-color) 3.36%, rgba(255, 255, 255, 0) 238.16%);
+  backdrop-filter: blur(6px);
+}
+
+.svg-heart-card {
+  width: 15px;
+  height: 15px;
+}
+
+.button-watch-movie {
+  display: inline-flex;
+  padding: 16px 23px;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--purple-color);
+  background: var(--purple-color);
+  /* text in button */
+  color: var(--8, var(--white-color));
+  font-family: var(--primary-medium-font);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: var(--regular-font-weight);
+  line-height: 20px;
+}
+
+.button-back {
+  display: inline-flex;
+  padding: 17px;
+  gap: 21px;
+  border-radius: 6.4px;
+  border: 3px solid rgba(245, 245, 245, 0.9);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.5) -9.39%,
+    rgba(255, 255, 255, 0.4) 106.21%
+  );
+  backdrop-filter: blur(42.5px);
+}
