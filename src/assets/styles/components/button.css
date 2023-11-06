@@ -1,49 +1,56 @@
 .button-heart-movie {
-  width: 56px;
-  height: 56px;
-  border-radius: 8px;
-  border: 1px solid var(--white-color);
-  background: linear-gradient(99deg, var(--white-color) 3.36%, rgba(255, 255, 255, 0) 238.16%);
+  border: 1px solid var(--text-color-primary);
+  border-radius: 14px;
+  width: 54px;
+  height: 54px;
+  background: linear-gradient(
+    99deg,
+    var(--text-color-primary) 3.36%,
+    rgba(255, 255, 255, 0) 238.16%
+  );
   backdrop-filter: blur(6px);
 }
 
 .button-heart-card {
-  width: 37px;
-  height: 37px;
-  border-radius: 8px;
-  border: 1px solid var(--white-color);
-  background: linear-gradient(99deg, var(--white-color) 3.36%, rgba(255, 255, 255, 0) 238.16%);
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 1px solid var(--text-color-primary);
+  border-radius: 9px;
+  width: 32px;
+  height: 32px;
+  padding: 8px;
+  background: linear-gradient(
+    99deg,
+    var(--text-color-primary) 3.36%,
+    rgba(255, 255, 255, 0) 238.16%
+  );
   backdrop-filter: blur(6px);
-}
-
-.svg-heart-card {
-  width: 15px;
-  height: 15px;
 }
 
 .button-watch-movie {
   display: inline-flex;
-  padding: 16px 23px;
   align-items: flex-start;
-  gap: 12px;
+  margin-right: 16px;
+  border: 1px solid var(--background-color-primary);
   border-radius: 14px;
-  border: 1px solid var(--purple-color);
-  background: var(--purple-color);
+  padding: 16px 23px;
+  background: var(--background-color-primary);
+
   /* text in button */
-  color: var(--8, var(--white-color));
-  font-family: var(--primary-medium-font);
-  font-size: 16px;
-  font-style: normal;
-  font-weight: var(--regular-font-weight);
+  font-size: var(--font-size-md);
   line-height: 20px;
+  font-family: var(--primary-medium-font);
+  font-weight: 500;
+  font-style: normal;
+  color: var(--text-color-primary);
 }
 
 .button-back {
   display: inline-flex;
-  padding: 17px;
-  gap: 21px;
-  border-radius: 6.4px;
   border: 3px solid rgba(245, 245, 245, 0.9);
+  border-radius: 6.4px;
+  padding: 17px;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0.5) -9.39%,

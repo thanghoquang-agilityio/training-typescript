@@ -7,11 +7,11 @@
 
 ## Timeline
 
-- 11 working days
+- 14 working days
 
 ## Team size
 
-- 1 Developer
+- 1 Developer: [Thang Ho Quang](mailto:thang.hoquang@asnet.com.vn)
 
 ## Targets
 
@@ -29,6 +29,16 @@
 
 - Apply localStorage
 
+- Apply Cypress for testing practice
+
+## Prerequisites
+
+- node: v18.16.1
+
+- npm: v9.8.0
+
+- cypress: v13.3.0
+
 ## Technical Stack
 
 - HTML5/CSS3
@@ -43,9 +53,9 @@
 
 - Parcel
 
-## Task Management
+## [Requirements](https://docs.google.com/document/d/1dWScri9rZZ3cINuATcL-IGf5s6j9YgM9dUL49JXziKY/edit)
 
-[Trello](https://trello.com/b/q49E7wwT/js-ts-training)
+## [Task Management](https://trello.com/b/q49E7wwT/js-ts-training)
 
 ## Getting started
 

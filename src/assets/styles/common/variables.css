@@ -1,19 +1,19 @@
 :root {
   /* all color in page */
-  --purple-color: #6100c2;
-  --pink-color: #7900c2;
-  --dark-color: #21201e;
-  --glass-color: #f5f5f5e5, #ffffff80;
-  --gray-color: #969696;
-  --white-color: #ffffff;
+  --background-color-primary: #6100c2;
+  --background-color-secondary: #21201e;
+  --text-color-primary: #ffffff;
+  --text-color-secondary: #000000;
 
   /* font family */
   --primary-font: Poppins;
   --primary-medium-font: Poppins-Medium;
 
-  /* font weight */
-  --text-font-weight: 400;
-  --regular-font-weight: 500;
-  --title-font-weight: 600;
-  --bold-font-weight: 700;
+  /* font size */
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 32px;
+  --font-size-4xl: 48px;
 }

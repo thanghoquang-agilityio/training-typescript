@@ -1,14 +1,117 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Streaming</title>
+    <link rel="stylesheet" href="../assets/styles/main.css" />
+    <script src="../scripts/main.ts" type="module" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar"></div>
+      <main>
+        <section class="lasted-movie">
+          <div class="lasted-movie-container">
+            <div class="top-navbar"></div>
+            <h1 class="lasted-movie-title">Insider</h1>
+            <p class="text-sub-title">2022 | Comedy horror | 1 Season</p>
+            <div class="lasted-movie-actions">
+              <button class="button-watch-movie">Watch now</button>
+              <button class="button-heart-movie">
+                <img src="../assets/icons/heart.svg" alt="heart-icon" />
+              </button>
+            </div>
+          </div>
+        </section>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=<1.0>">
-  <title>Document</title>
-  <link rel="stylesheet" href="./../assets/styles/main.css">
-</head>
+        <section class="trending-movie">
+          <h2 class="text-title-section">Trending</h2>
+          <div class="trending-movie-wrapper">
+            <div
+              class="card-trending"
+              style="background-image: url('../assets/images/tokyo-train.png')"
+            >
+              <button class="button-heart-card">
+                <img
+                  class="icon-button-card"
+                  src="../assets/icons/heart-full.svg"
+                  alt="heart-icon"
+                />
+              </button>
+              <div class="card-content">
+                <p class="text">Tokyo Train</p>
+                <p class="text-sub-title">2022 | Action comedy</p>
+              </div>
+            </div>
 
-<body>
-</body>
+            <div
+              class="card-trending"
+              style="background-image: url('../assets/images/tokyo-train.png')"
+            >
+              <button class="button-heart-card">
+                <img
+                  class="icon-button-card"
+                  src="../assets/icons/heart-full.svg"
+                  alt="heart-icon"
+                />
+              </button>
+              <div class="card-content">
+                <p class="text">Tokyo Train</p>
+                <p class="text-sub-title">2022 | Action comedy</p>
+              </div>
+            </div>
 
+            <div
+              class="card-trending"
+              style="background-image: url('../assets/images/tokyo-train.png')"
+            >
+              <button class="button-heart-card">
+                <img
+                  class="icon-button-card"
+                  src="../assets/icons/heart-full.svg"
+                  alt="heart-icon"
+                />
+              </button>
+              <div class="card-content">
+                <p class="text">Tokyo Train</p>
+                <p class="text-sub-title">2022 | Action comedy</p>
+              </div>
+            </div>
+
+            <div
+              class="card-trending"
+              style="background-image: url('../assets/images/tokyo-train.png')"
+            >
+              <button class="button-heart-card">
+                <img
+                  class="icon-button-card"
+                  src="../assets/icons/heart-full.svg"
+                  alt="heart-icon"
+                />
+              </button>
+              <div class="card-content">
+                <p class="text">Tokyo Train</p>
+                <p class="text-sub-title">2022 | Action comedy</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="continue-watching">
+          <h2 class="text-title-section">Continue watching</h2>
+          <div class="continue-watching-wrapper">
+            <div
+              class="card-continue-watching"
+              style="background-image: url('../assets/images/skateboard.png')"
+            >
+              <button class="button-heart-card">
+                <img class="icon-button-card" src="../assets/icons/heart.svg" alt="heart-icon" />
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
 </html>

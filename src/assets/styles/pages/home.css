@@ -1,0 +1,58 @@
+.lasted-movie {
+  background-position: center;
+  background-image: url('../../images/bgr-lasted-movie.png');
+  background-size: cover;
+  height: 455px;
+}
+
+.lasted-movie-container {
+  margin: 0 42px auto 32px;
+}
+
+.lasted-movie .navbar {
+  padding-top: 47px;
+}
+
+.lasted-movie-title {
+  margin-top: 152px;
+  font-size: var(--font-size-4xl);
+  line-height: 48px;
+  font-family: var(--primary-font);
+  font-weight: 600;
+  text-align: left;
+  color: var(--text-color-primary);
+}
+
+.lasted-movie .text-sub-title {
+  margin-top: 20px;
+  line-height: 20px;
+  color: var(--text-color-primary);
+}
+
+.lasted-movie-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 36px;
+}
+
+.trending-movie {
+  margin: 6px 42px 0 32px;
+}
+
+.trending-movie-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.continue-watching {
+  margin: 32px 42px 0 32px;
+}
+
+.continue-watching-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  margin-top: 16px;
+}

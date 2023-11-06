@@ -1,0 +1,34 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  height: 32px;
+}
+
+.navbar .text {
+  font-weight: 500;
+  color: var(--text-color-primary);
+}
+
+.navbar-categories .text {
+  cursor: pointer;
+}
+
+.navbar-categories .text:not(:last-child) {
+  margin-right: 32px;
+}
+
+.navbar-actions {
+  display: flex;
+  justify-content: space-between;
+  max-width: 198px;
+  height: 32px;
+}
+
+.profile-menu {
+  display: flex;
+  align-items: center;
+}
+
+.avatar-profile {
+  margin-right: 8px;
+}
