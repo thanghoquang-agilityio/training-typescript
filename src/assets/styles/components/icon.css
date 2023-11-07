@@ -7,10 +7,16 @@
   margin-right: 24px;
   width: 24px;
   height: 24px;
+  cursor: pointer;
+}
+
+.icon-navbar-action:hover {
+  margin-right: 21px;
+  width: 27px;
+  height: 27px;
 }
 
 .icon-sidebar-logo {
-  margin-bottom: 58px;
   width: 131px;
   height: 32px;
 }

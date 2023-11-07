@@ -8,7 +8,10 @@
     var(--text-color-primary) 3.36%,
     rgba(255, 255, 255, 0) 238.16%
   );
-  backdrop-filter: blur(6px);
+}
+
+.button-heart-movie:hover {
+  border: 1px solid var(--background-color-primary);
 }
 
 .button-heart-card {
@@ -25,7 +28,10 @@
     var(--text-color-primary) 3.36%,
     rgba(255, 255, 255, 0) 238.16%
   );
-  backdrop-filter: blur(6px);
+}
+
+.button-heart-card:hover {
+  border: 1px solid var(--background-color-primary);
 }
 
 .button-watch-movie {
@@ -46,6 +52,10 @@
   color: var(--text-color-primary);
 }
 
+.button-watch-movie:hover {
+  font-weight: 700;
+}
+
 .button-back {
   display: inline-flex;
   border: 3px solid rgba(245, 245, 245, 0.9);
@@ -56,5 +66,4 @@
     rgba(255, 255, 255, 0.5) -9.39%,
     rgba(255, 255, 255, 0.4) 106.21%
   );
-  backdrop-filter: blur(42.5px);
 }

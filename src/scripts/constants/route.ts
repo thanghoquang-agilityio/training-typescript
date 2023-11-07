@@ -1,5 +1,4 @@
 export const ROUTES = {
-  default: '/',
   homePage: '/',
   favouritesPage: '/favourites.html',
   trendingPage: '/trending.html',

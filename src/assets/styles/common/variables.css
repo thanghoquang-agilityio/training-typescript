@@ -2,8 +2,10 @@
   /* all color in page */
   --background-color-primary: #6100c2;
   --background-color-secondary: #21201e;
+  --background-color-tertiary: #221f1d;
   --text-color-primary: #ffffff;
   --text-color-secondary: #000000;
+  --border-color-primary: #8a8b8b;
 
   /* font family */
   --primary-font: Poppins;

@@ -13,6 +13,10 @@
   cursor: pointer;
 }
 
+.navbar-categories .text:hover {
+  font-weight: 700;
+}
+
 .navbar-categories .text:not(:last-child) {
   margin-right: 32px;
 }
@@ -27,6 +31,12 @@
 .profile-menu {
   display: flex;
   align-items: center;
+  border: 1px solid rgba(34, 31, 29, 255);
+  cursor: pointer;
+}
+
+.profile-menu:hover .text {
+  font-weight: 700;
 }
 
 .avatar-profile {

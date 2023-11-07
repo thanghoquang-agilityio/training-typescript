@@ -18,7 +18,9 @@ const sidebarTemplate = (currentPath: string): string => {
   ).join('');
 
   return `
-    <img class="icon-sidebar-logo" src="./icons/logo.svg" alt="logo" />
+    <a class="sidebar-logo" href="/">  
+      <img class="icon-sidebar-logo" src="./icons/logo.svg" alt="logo" />
+    </a>
     <div class="sidebar-actions">
       <ul class="sidebar-pages">
         ${sidebarItemsHTML}

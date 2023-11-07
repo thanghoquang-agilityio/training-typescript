@@ -8,9 +8,12 @@
 
 .card-details-cover-image {
   margin-right: 24px;
+  border: 1px solid var(--border-color-primary);
+  border-radius: 20px;
   width: 100%;
   min-height: 431px;
-  object-fit: contain;
+  object-fit: cover;
+  cursor: pointer;
 }
 
 .card-details-information {

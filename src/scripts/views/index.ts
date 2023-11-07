@@ -1,3 +1,1 @@
-export class MovieView {
-  constructor() {}
-}
+export * from './movieView';
