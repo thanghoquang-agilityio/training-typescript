@@ -1,1 +1,1 @@
-export * from './movieView';
+export * from './movie';

@@ -3,17 +3,17 @@
   grid-template-columns: 1fr 1fr;
   align-items: center;
   gap: 24px;
-  margin: 56px 42px auto 32px;
+  margin: 56px 42px 60px 32px;
 }
 
 .card-details-cover-image {
   margin-right: 24px;
   border: 1px solid var(--border-color-primary);
   border-radius: 20px;
+  max-height: 429px;
   width: 100%;
-  min-height: 431px;
-  object-fit: cover;
   cursor: pointer;
+  object-fit: cover;
 }
 
 .card-details-information {

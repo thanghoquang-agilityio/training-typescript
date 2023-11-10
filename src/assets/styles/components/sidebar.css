@@ -55,6 +55,6 @@
 
 .sidebar-actions .sidebar-active {
   opacity: 1;
-  font-family: var(--primary-medium-font);
   font-weight: 700;
+  font-family: var(--primary-medium-font);
 }

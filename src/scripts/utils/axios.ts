@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
-// service time out 5 minutes
+// Service time out 5 minutes
 const TIMEOUT = 5 * 60 * 1000;
 
 const instance: AxiosInstance = axios.create({
