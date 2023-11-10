@@ -10,7 +10,7 @@ const sidebarTemplate = (currentPath: string): string => {
     ({ path, iconName, title }) =>
       `
       <li>
-        <a href="${path}" class="text ${path === currentPath && 'sidebar-active'}">
+        <a href="${path}" class="text ${path === currentPath ? 'sidebar-active' : ''}">
           <img class="icon-sidebar-action" src="./icons/${iconName}.svg" alt="${iconName}-icon" />${title}
         </a>
       </li>

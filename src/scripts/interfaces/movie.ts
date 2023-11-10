@@ -3,13 +3,13 @@ import { Category } from '@/types';
 export interface Movie {
   id: string;
   title: string;
-  displayImage: string;
+  image: string;
   category: Category;
   type: string;
-  releaseYear: number;
+  release: number;
   rating?: number;
   video: string;
-  videoDuration?: string;
+  duration?: string;
   description: string;
   favourites?: string;
   incompleteness?: string;

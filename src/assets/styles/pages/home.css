@@ -46,6 +46,10 @@
   margin-top: 16px;
 }
 
+.trending-movie-wrapper figure {
+  max-height: 299px;
+}
+
 .continue-watching {
   margin: 32px 42px 0 32px;
 }
@@ -55,4 +59,8 @@
   grid-template-columns: 1fr 1fr 1fr;
   gap: 24px;
   margin-top: 16px;
+}
+
+.continue-watching-wrapper figure {
+  max-height: 207px;
 }

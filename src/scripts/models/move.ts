@@ -1,11 +1,8 @@
-import { API_ENDPOINT } from '@/constants';
+import axios from '@/utils/axios';
+
 import { FiledMovie } from '@/types';
 import { Movie } from '@/interfaces';
-
-import axios from '@/utils/axios';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { API_ENDPOINT } from '@/constants';
 
 export class MovieModel {
   /**
@@ -24,13 +21,29 @@ export class MovieModel {
    * @param {string} params - Optional query parameters.
    * @returns {Promise<Movie[]>} A promise resolving to the list of movies.
    */
+  getMovieList = async (limit: number = 0): Promise<Movie[]> => {
+    const response: Movie[] = await axios.get(
+      `${API_ENDPOINT.MOVIES}?${limit ? '_limit=' + limit : ''}`,
+    );
+
+    return response;
+  };
+
+  /**
+   * Fetches the list of movies with expanded movie manager information.
+   * @param {string} params - Optional query parameters.
+   * @returns {Promise<Movie[]>} A promise resolving to the list of movies.
+   */
   getMoviesByField = async (
     filed: FiledMovie,
     params: string = '',
-    link: boolean = false,
+    like: boolean = false,
+    limit: number = 0,
   ): Promise<Movie[]> => {
     const response: Movie[] = await axios.get(
-      `${API_ENDPOINT.MOVIES}?${filed}${link && '_like'}=${params}`,
+      `${API_ENDPOINT.MOVIES}?${limit ? '_limit=' + limit : ''}${limit ? '&' + filed : filed}${
+        like ? '_like' : ''
+      }=${params}`,
     );
 
     return response;
