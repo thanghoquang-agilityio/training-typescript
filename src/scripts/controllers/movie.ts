@@ -1,8 +1,10 @@
 import { MovieModel } from '@/models';
 import { MovieView } from '@/views';
 import { renderSidebar, renderNavbar, renderMovieList, renderMovieDetail } from '@/templates';
+import { Movie } from '@/interfaces';
+import { disableElement, enableElement } from '@/utils/prevent';
 import { MovieGenre } from '@/enums';
-import { ROUTES } from '@/constants';
+import { ROUTES, USER_ID, MOVIE_FIELD, TOP_TRENDING_LIMIT } from '@/constants';
 
 export class MovieController {
   model: MovieModel;
@@ -21,29 +23,83 @@ export class MovieController {
   }
 
   private displayMovieList = async (path: string) => {
-    const trendingMovieList = await this.model.getMovieList(4);
+    let trendingMovieList: Movie[] = [];
 
     switch (path) {
       case ROUTES.homePage:
-        const continueWatchingMovieList = await this.model.getMoviesByField('incompleteness', '1');
+        trendingMovieList = await this.model.getMovieList(TOP_TRENDING_LIMIT);
+        const continueWatchingMovieList = await this.model.getMoviesByField(
+          MOVIE_FIELD.incompleteness,
+          USER_ID,
+        );
 
         renderMovieList(trendingMovieList, MovieGenre.Trending);
         renderMovieList(continueWatchingMovieList, MovieGenre.ContinueWatching);
         break;
 
       case ROUTES.favouritesPage:
-        const favouritesMovieList = await this.model.getMoviesByField('favourites', '1');
+        const favouritesMovieList = await this.model.getMoviesByField(
+          MOVIE_FIELD.favourites,
+          USER_ID,
+        );
 
         renderMovieList(favouritesMovieList, MovieGenre.Favourites);
         break;
 
       case ROUTES.trendingPage:
       default: {
-        const detailsMovie = await this.model.getMovieById('1');
+        trendingMovieList = await this.model.getMovieList(TOP_TRENDING_LIMIT);
 
         renderMovieList(trendingMovieList, MovieGenre.Trending);
-        renderMovieDetail(detailsMovie);
         break;
+      }
+    }
+
+    this.view.bindAddFavouritesEvent(this.updateMovieInFavourites);
+  };
+
+  /**
+   * Handles the addition of a movie.
+   * @param {string} movieId - The ID of the movie to be updated in favourites page.
+   * @param {boolean} isCreated - It's true, data will be added. It's false, data will be removed.
+   */
+  private updateMovieInFavourites = async (
+    movieId: string,
+    isCreated: boolean,
+    targetElement: HTMLElement,
+  ) => {
+    disableElement('button');
+    disableElement('a');
+
+    const currentMovie = await this.model.getMovieById(movieId);
+    const favouritesList = currentMovie.favourites;
+    let updatedFavouritesList: string = '';
+
+    if (isCreated && !favouritesList) {
+      updatedFavouritesList = USER_ID;
+    } else if (isCreated && favouritesList) {
+      updatedFavouritesList = `${favouritesList},${USER_ID}`;
+    }
+
+    const data = {
+      favourites: updatedFavouritesList,
+    };
+
+    const response = await this.model.updateMovie(movieId, data);
+
+    if (response.favourites.includes(USER_ID)) {
+      let iconButtonMovie = targetElement.closest('img');
+      const buttonAddMovie = targetElement.closest('button');
+
+      if (!iconButtonMovie) iconButtonMovie = targetElement.querySelector('img');
+
+      if (iconButtonMovie) {
+        iconButtonMovie.setAttribute('src', './icons/heart-full.svg');
+
+        if (buttonAddMovie) {
+          buttonAddMovie.classList.remove('add-movie-into-favourites');
+          buttonAddMovie.classList.add('remove-movie-from-favourites');
+        }
       }
     }
   };

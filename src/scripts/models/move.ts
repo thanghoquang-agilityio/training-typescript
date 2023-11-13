@@ -1,7 +1,6 @@
 import axios from '@/utils/axios';
 
-import { FiledMovie } from '@/types';
-import { Movie } from '@/interfaces';
+import { Movie, MovieFavourites } from '@/interfaces';
 import { API_ENDPOINT } from '@/constants';
 
 export class MovieModel {
@@ -23,7 +22,7 @@ export class MovieModel {
    */
   getMovieList = async (limit: number = 0): Promise<Movie[]> => {
     const response: Movie[] = await axios.get(
-      `${API_ENDPOINT.MOVIES}?${limit ? '_limit=' + limit : ''}`,
+      `${API_ENDPOINT.MOVIES}?${limit ? `_limit=${limit}` : ''}`,
     );
 
     return response;
@@ -35,13 +34,13 @@ export class MovieModel {
    * @returns {Promise<Movie[]>} A promise resolving to the list of movies.
    */
   getMoviesByField = async (
-    filed: FiledMovie,
+    filed: keyof Movie,
     params: string = '',
     like: boolean = false,
     limit: number = 0,
   ): Promise<Movie[]> => {
     const response: Movie[] = await axios.get(
-      `${API_ENDPOINT.MOVIES}?${limit ? '_limit=' + limit : ''}${limit ? '&' + filed : filed}${
+      `${API_ENDPOINT.MOVIES}?${limit ? `_limit=${limit}&${filed}` : filed}${
         like ? '_like' : ''
       }=${params}`,
     );
@@ -77,7 +76,7 @@ export class MovieModel {
    * @param {MovieForm} movie - The movie details to update.
    * @returns {Promise<MovieForm>} A promise resolving to the updated movie details.
    */
-  updateMovie = async (id: string, movie: Movie): Promise<Movie> => {
+  updateMovie = async (id: string, movie: Movie | MovieFavourites): Promise<Movie> => {
     const data: Movie = await axios.patch(`${API_ENDPOINT.MOVIES}/${id}`, movie);
 
     return data;

@@ -46,12 +46,12 @@
   margin-top: 16px;
 }
 
-.trending-movie-wrapper figure {
-  max-height: 299px;
+.trending-movie-wrapper img {
+  max-height: 302px;
 }
 
 .continue-watching {
-  margin: 32px 42px 0 32px;
+  margin: 32px 42px 32px 32px;
 }
 
 .continue-watching-wrapper {
