@@ -11,6 +11,10 @@ export interface Movie {
   video: string;
   duration?: string;
   description: string;
-  favourites?: string;
-  incompleteness?: string;
+  favourites: string;
+  incompleteness: string;
+}
+
+export interface MovieFavourites {
+  favourites: string;
 }

@@ -1,5 +1,6 @@
 import { Movie } from '@/interfaces';
 import { MovieGenre } from '@/enums';
+import { USER_ID } from '@/constants';
 
 /**
  * Generates the movie list HTML template.
@@ -10,13 +11,15 @@ import { MovieGenre } from '@/enums';
 const movieListTemplate = (movieList: Movie[], movieGenre: MovieGenre): string => {
   const movieListHTML = movieList
     .map(
-      ({ id, title, image, release, type }) =>
+      ({ id, title, image, release, type, favourites }) =>
         `
-          <figure class="card-${movieGenre}" id="movie-${id}">
-            <button class="button-heart-card">
+          <figure class="card-${movieGenre}" id="${id}">
+            <button class="button-heart-card ${
+              favourites === USER_ID ? 'remove-movie-from-favourites' : 'add-movie-into-favourites'
+            }">
               <img
                 class="icon-button-card"
-                src="./icons/heart-full.svg"
+                src=${favourites === USER_ID ? './icons/heart-full.svg' : './icons/heart.svg'}
                 alt="heart-icon"
               />
             </button>
@@ -54,10 +57,9 @@ export const renderMovieList = (movieList: Movie[], movieGenre: MovieGenre) => {
       break;
 
     case MovieGenre.ContinueWatching:
+    default: {
       movieListElement = document.querySelector('.continue-watching-wrapper');
       break;
-
-    default: {
     }
   }
 

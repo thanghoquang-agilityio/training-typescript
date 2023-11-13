@@ -37,9 +37,9 @@ const movieDetailTemplate = (movie: Movie): string => `
   `;
 
 export const renderMovieDetail = (movie: Movie) => {
-  const detailsMovieElement: HTMLElement | null = document.querySelector('.card-details');
+  const movieDetailElement: HTMLElement | null = document.querySelector('.card-details');
 
-  if (detailsMovieElement) {
-    detailsMovieElement.innerHTML = movieDetailTemplate(movie);
+  if (movieDetailElement) {
+    movieDetailElement.innerHTML = movieDetailTemplate(movie);
   }
 };
