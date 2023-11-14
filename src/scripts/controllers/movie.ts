@@ -35,15 +35,20 @@ export class MovieController {
 
         renderMovieList(trendingMovieList, MovieGenre.Trending);
         renderMovieList(continueWatchingMovieList, MovieGenre.ContinueWatching);
+
+        this.view.bindAddOrRemoveFavouritesEvent(this.updateMovieInFavourites);
         break;
 
       case ROUTES.favouritesPage:
         const favouritesMovieList = await this.model.getMoviesByField(
           MOVIE_FIELD.favourites,
           USER_ID,
+          true,
         );
 
         renderMovieList(favouritesMovieList, MovieGenre.Favourites);
+
+        this.view.bindAddOrRemoveFavouritesEvent(this.removeMovieInFavourites);
         break;
 
       case ROUTES.trendingPage:
@@ -51,56 +56,86 @@ export class MovieController {
         trendingMovieList = await this.model.getMovieList(TOP_TRENDING_LIMIT);
 
         renderMovieList(trendingMovieList, MovieGenre.Trending);
+
+        this.view.bindAddOrRemoveFavouritesEvent(this.updateMovieInFavourites);
         break;
       }
     }
-
-    this.view.bindAddFavouritesEvent(this.updateMovieInFavourites);
   };
 
   /**
    * Handles the addition of a movie.
    * @param {string} movieId - The ID of the movie to be updated in favourites page.
-   * @param {boolean} isCreated - It's true, data will be added. It's false, data will be removed.
+   * @param {HTMLElement} targetElement - The movie was clicked.
    */
   private updateMovieInFavourites = async (
     movieId: string,
-    isCreated: boolean,
+    favouritesList: string[],
     targetElement: HTMLElement,
   ) => {
-    disableElement('button');
-    disableElement('a');
+    const parentFigure = targetElement.closest('figure') as HTMLElement;
 
-    const currentMovie = await this.model.getMovieById(movieId);
-    const favouritesList = currentMovie.favourites;
-    let updatedFavouritesList: string = '';
+    parentFigure.classList.add('card-loading');
 
-    if (isCreated && !favouritesList) {
-      updatedFavouritesList = USER_ID;
-    } else if (isCreated && favouritesList) {
-      updatedFavouritesList = `${favouritesList},${USER_ID}`;
+    let updatedFavouritesList: string[] = favouritesList;
+
+    // Check like or dislike movie
+    if (favouritesList.includes(USER_ID)) {
+      updatedFavouritesList = favouritesList.filter((item) => !USER_ID.includes(item));
+    } else {
+      if (!updatedFavouritesList) {
+        updatedFavouritesList = [USER_ID];
+      } else {
+        favouritesList.push(USER_ID);
+        updatedFavouritesList = favouritesList;
+      }
     }
 
     const data = {
       favourites: updatedFavouritesList,
     };
 
+    // Call API update favourites
     const response = await this.model.updateMovie(movieId, data);
+    let iconButtonMovie = targetElement.closest('img');
 
-    if (response.favourites.includes(USER_ID)) {
-      let iconButtonMovie = targetElement.closest('img');
-      const buttonAddMovie = targetElement.closest('button');
+    if (!iconButtonMovie) iconButtonMovie = targetElement.querySelector('img');
 
-      if (!iconButtonMovie) iconButtonMovie = targetElement.querySelector('img');
+    console.log(iconButtonMovie);
 
-      if (iconButtonMovie) {
+    // Check update success or failed
+    if (iconButtonMovie) {
+      if (response.favourites.includes(USER_ID)) {
         iconButtonMovie.setAttribute('src', './icons/heart-full.svg');
-
-        if (buttonAddMovie) {
-          buttonAddMovie.classList.remove('add-movie-into-favourites');
-          buttonAddMovie.classList.add('remove-movie-from-favourites');
-        }
+      } else {
+        iconButtonMovie.setAttribute('src', './icons/heart.svg');
       }
+      parentFigure.setAttribute('data-favourites', response.favourites.join(','));
     }
+
+    parentFigure.classList.remove('card-loading');
+  };
+
+  /**
+   * Handles the deletion of a movie.
+   * @param {string} movieId - The ID of the movie to be removed in favourites page.
+   * @param {HTMLElement} targetElement - The movie was clicked.
+   */
+  private removeMovieInFavourites = async (
+    movieId: string,
+    favouritesList: string[],
+    targetElement: HTMLElement,
+  ) => {
+    await this.updateMovieInFavourites(movieId, favouritesList, targetElement);
+
+    const favouritesMovieList = await this.model.getMoviesByField(
+      MOVIE_FIELD.favourites,
+      USER_ID,
+      true,
+    );
+
+    renderMovieList(favouritesMovieList, MovieGenre.Favourites);
+
+    this.view.bindAddOrRemoveFavouritesEvent(this.removeMovieInFavourites);
   };
 }
