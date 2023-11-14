@@ -52,6 +52,7 @@ main::-webkit-scrollbar-thumb {
   background-color: rgba(34, 31, 29, 255);
 }
 
-button {
+button,
+figure {
   cursor: pointer;
 }

@@ -60,3 +60,15 @@
 .card-favourites img {
   object-fit: cover;
 }
+
+.card-loading {
+  opacity: 0.8;
+}
+
+.card-loading .button-heart-card {
+  pointer-events: none;
+}
+
+.card-loading .loader {
+  display: inline;
+}

@@ -13,7 +13,9 @@ const movieListTemplate = (movieList: Movie[], movieGenre: MovieGenre): string =
     .map(
       ({ id, title, image, release, type, favourites }) =>
         `
-          <figure class="card-${movieGenre}" id="${id}">
+          <figure class="card-${movieGenre}" id="${id}" data-favourites=${
+            favourites.length ? favourites : ''
+          }>
             <button class="button-heart-card">
               <img
                 class="icon-button-card"

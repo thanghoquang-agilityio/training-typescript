@@ -1,7 +1,7 @@
 {
   "movies": [
     {
-      "id": 1,
+      "id": ["1"],
       "title": "Tokyo Train",
       "image": "./images/tokyo-train.png",
       "category": "Movies",
@@ -11,8 +11,8 @@
       "video": "link",
       "duration": "2h 14m",
       "description": "It's possible that this movie might have been released or gained prominence after that time or might be a more independent or lesser-known production.",
-      "favourites": "5,6",
-      "incompleteness": ""
+      "favourites": ["5", "6"],
+      "incompleteness": []
     },
     {
       "id": 2,
@@ -25,8 +25,8 @@
       "video": "link",
       "duration": "1h 30m",
       "description": "The movie is a science fiction disaster film directed by Roland Emmerich, known for his work on movies like 'Independence Day' and 'The Day After Tomorrow.' The film was released in 2022. The storyline revolves around a group of individuals who must embark on a dangerous mission to save the world when the Moon is knocked from its orbit and hurtles toward Earth.",
-      "favourites": "",
-      "incompleteness": ""
+      "favourites": [],
+      "incompleteness": []
     },
     {
       "id": 3,
@@ -39,8 +39,8 @@
       "video": "link",
       "duration": "3h 00m",
       "description": "Paris, being a city with immense cultural richness and a long history, has been the backdrop for numerous films and documentaries showcasing different aspects of life, whether it's the romance of the city, its cultural heritage, or the everyday lives of its residents.",
-      "favourites": "1",
-      "incompleteness": ""
+      "favourites": ["1"],
+      "incompleteness": []
     },
     {
       "id": 4,
@@ -53,8 +53,8 @@
       "video": "update_later",
       "duration": "2h 38m",
       "description": "The movie follows the lives of a wealthy family, the Johnsons, who appear to have it all: a grand mansion, luxurious cars, and expensive designer clothing. However, behind the facade of their lavish lifestyle, there are deep-seated tensions and secrets that threaten to tear the family apart.",
-      "favourites": "4,1",
-      "incompleteness": ""
+      "favourites": ["4", "1"],
+      "incompleteness": []
     },
     {
       "id": 5,
@@ -67,8 +67,8 @@
       "video": "update_later",
       "duration": "2h 12m",
       "description": "It's possible that 'Bullet Science' might be a newer release or a more niche production that gained prominence after that time. If it's a recent project, it might not have gained widespread recognition or detailed coverage up to that point.",
-      "favourites": "1",
-      "incompleteness": ""
+      "favourites": ["1"],
+      "incompleteness": []
     },
     {
       "id": 7,
@@ -81,8 +81,8 @@
       "video": "update_later",
       "duration": "4h 12m",
       "description": "Studying galaxies is crucial in the field of astronomy as it provides insights into the universe's evolution, structure, and composition. Understanding different types of galaxies and their behaviors helps scientists comprehend the vast expanse of the cosmos, the formation of stars and planetary systems, and the distribution of dark matter.",
-      "favourites": "",
-      "incompleteness": 1
+      "favourites": [],
+      "incompleteness": ["1"]
     },
     {
       "id": 8,
@@ -95,8 +95,8 @@
       "video": "update_later",
       "duration": "1h 12m",
       "description": "It's so dangerous, I advise you shouldn't play it.",
-      "favourites": "1",
-      "incompleteness": 1
+      "favourites": [],
+      "incompleteness": ["1"]
     },
     {
       "id": 9,
@@ -109,8 +109,8 @@
       "video": "update_later",
       "duration": "4h 12m",
       "description": "Studying galaxies is crucial in the field of astronomy as it provides insights into the universe's evolution, structure, and composition. Understanding different types of galaxies and their behaviors helps scientists comprehend the vast expanse of the cosmos, the formation of stars and planetary systems, and the distribution of dark matter.",
-      "favourites": "",
-      "incompleteness": 1
+      "favourites": [],
+      "incompleteness": ["1"]
     }
   ]
 }
