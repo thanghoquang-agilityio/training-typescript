@@ -49,6 +49,7 @@ export class MovieController {
         renderMovieList(favouritesMovieList, MovieGenre.Favourites);
 
         this.view.bindAddOrRemoveFavouritesEvent(this.removeMovieInFavourites);
+
         break;
 
       case ROUTES.trendingPage:
@@ -101,8 +102,6 @@ export class MovieController {
 
     if (!iconButtonMovie) iconButtonMovie = targetElement.querySelector('img');
 
-    console.log(iconButtonMovie);
-
     // Check update success or failed
     if (iconButtonMovie) {
       if (response.favourites.includes(USER_ID)) {
@@ -126,7 +125,7 @@ export class MovieController {
     favouritesList: string[],
     targetElement: HTMLElement,
   ) => {
-    await this.updateMovieInFavourites(movieId, favouritesList, targetElement);
+    await this.updateMovieInFavourites(movieId, favouritesList, targetElement);sssssssssssssssss
 
     const favouritesMovieList = await this.model.getMoviesByField(
       MOVIE_FIELD.favourites,
