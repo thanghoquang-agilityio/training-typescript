@@ -1,9 +1,11 @@
 .card-details {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
   gap: 24px;
   margin: 56px 42px 60px 32px;
+  min-height: 430px;
 }
 
 .card-details-cover-image {
@@ -54,4 +56,8 @@
   display: flex;
   align-items: center;
   margin-top: 26px;
+}
+
+.card-details-loading button {
+  pointer-events: none;
 }

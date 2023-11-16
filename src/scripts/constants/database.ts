@@ -6,6 +6,7 @@ const MOVIE_FIELD = {
   category: 'category',
   type: 'type',
   release: 'release',
+  isTrending: 'isTrending',
   favourites: 'favourites',
   incompleteness: 'incompleteness',
 } as const;
