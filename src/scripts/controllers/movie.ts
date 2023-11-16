@@ -66,7 +66,7 @@ export class MovieController {
         if (response.status === StatusCode.Ok) {
           this.movieData.favourites = response.data;
         }
-
+        
         break;
 
       case ROUTES.trendingPage:
