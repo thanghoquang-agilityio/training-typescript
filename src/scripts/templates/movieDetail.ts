@@ -1,4 +1,5 @@
 import { Movie } from '@/interfaces';
+import { USER_ID } from '@/constants';
 
 /**
  * Generates the details movie HTML template.
@@ -29,8 +30,10 @@ const movieDetailTemplate = (movie: Movie): string => `
       <p class="text">${movie.description}</p>
       <div class="card-details-actions">
         <button class="button-watch-movie">Watch now</button>
-        <button class="button-heart-movie">
-          <img src="./icons/heart.svg" alt="heart-icon" />
+        <button class="button-heart-movie" id=${movie.id} data-favourites=${movie.favourites}>
+          <img src=${
+            movie.favourites.includes(USER_ID) ? './icons/heart-full.svg' : './icons/heart.svg'
+          } alt="heart-icon" />
         </button>
       </div>
     </div>

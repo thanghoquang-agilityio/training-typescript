@@ -1,6 +1,6 @@
 import axios from '@/utils/axios';
 
-import { Movie, MovieFavourites } from '@/interfaces';
+import { Movie } from '@/interfaces';
 import { API_ENDPOINT } from '@/constants';
 
 export class MovieModel {
@@ -9,10 +9,21 @@ export class MovieModel {
    * @param {string} id - The ID of the movie to fetch.
    * @returns {Promise<Movie>} A promise resolving to the movie details response.
    */
-  getMovieById = async (id: string): Promise<Movie> => {
-    const data: Movie = await axios.get(`${API_ENDPOINT.MOVIES}/${id}`);
+  getMovieById = async (id: string): Promise<{ status: number; data: Movie }> => {
+    const response = await axios.get(`${API_ENDPOINT.MOVIES}/${id}`);
 
-    return data;
+    return { status: response.status, data: response.data };
+  };
+
+  /**
+   * Fetches the list of movies with expanded movie manager information.
+   * @param {number} limit - Optional query parameters.
+   * @returns {Promise<Movie[]>} A promise resolving to the list of movies.
+   */
+  getMovieList = async (limit: number = 0): Promise<{ status: number; data: Movie[] }> => {
+    const response = await axios.get(`${API_ENDPOINT.MOVIES}?${limit ? `_limit=${limit}` : ''}`);
+
+    return { status: response.status, data: response.data };
   };
 
   /**
@@ -20,32 +31,24 @@ export class MovieModel {
    * @param {string} params - Optional query parameters.
    * @returns {Promise<Movie[]>} A promise resolving to the list of movies.
    */
-  getMovieList = async (limit: number = 0): Promise<Movie[]> => {
-    const response: Movie[] = await axios.get(
-      `${API_ENDPOINT.MOVIES}?${limit ? `_limit=${limit}` : ''}`,
-    );
-
-    return response;
-  };
-
-  /**
-   * Fetches the list of movies with expanded movie manager information.
-   * @param {string} params - Optional query parameters.
-   * @returns {Promise<Movie[]>} A promise resolving to the list of movies.
-   */
-  getMoviesByField = async (
-    filed: keyof Movie,
-    params: string = '',
-    like: boolean = false,
-    limit: number = 0,
-  ): Promise<Movie[]> => {
-    const response: Movie[] = await axios.get(
-      `${API_ENDPOINT.MOVIES}?${limit ? `_limit=${limit}&${filed}` : filed}${
+  getMoviesByField = async ({
+    field,
+    value = '',
+    like = false,
+    limit = 0,
+  }: {
+    field: keyof Movie;
+    value: string | boolean;
+    like?: boolean;
+    limit?: number;
+  }): Promise<{ status: number; data: Movie[] }> => {
+    const response = await axios.get(
+      `${API_ENDPOINT.MOVIES}?${limit ? `_limit=${limit}&${field}` : field}${
         like ? '_like' : ''
-      }=${params}`,
+      }=${value}`,
     );
 
-    return response;
+    return { status: response.status, data: response.data };
   };
 
   /**
@@ -53,10 +56,10 @@ export class MovieModel {
    * @param {string} id - The ID of the movie to delete.
    * @returns {Promise<void>} A promise that resolves when the movie is deleted.
    */
-  deleteMovie = async (id: string): Promise<Movie> => {
-    const data: Movie = await axios.delete(`${API_ENDPOINT.MOVIES}/${id}`);
+  deleteMovie = async (id: string): Promise<{ status: number; data: Movie }> => {
+    const response = await axios.delete(`${API_ENDPOINT.MOVIES}/${id}`);
 
-    return data;
+    return { status: response.status, data: response.data };
   };
 
   /**
@@ -64,10 +67,10 @@ export class MovieModel {
    * @param {MovieForm} movie - The movie details to be created.
    * @returns {Promise<MovieForm>} A promise resolving to the created movie details.
    */
-  createMovie = async (movie: Movie): Promise<Movie> => {
-    const data: Movie = await axios.post(API_ENDPOINT.MOVIES, movie);
+  createMovie = async (movie: Movie): Promise<{ status: number; data: Movie }> => {
+    const response = await axios.post(API_ENDPOINT.MOVIES, movie);
 
-    return data;
+    return { status: response.status, data: response.data };
   };
 
   /**
@@ -76,9 +79,9 @@ export class MovieModel {
    * @param {MovieForm} movie - The movie details to update.
    * @returns {Promise<MovieForm>} A promise resolving to the updated movie details.
    */
-  updateMovie = async (id: string, movie: Movie | MovieFavourites): Promise<Movie> => {
-    const data: Movie = await axios.patch(`${API_ENDPOINT.MOVIES}/${id}`, movie);
+  updateMovie = async (id: string, movie: Movie): Promise<{ status: number; data: Movie }> => {
+    const response = await axios.patch(`${API_ENDPOINT.MOVIES}/${id}`, movie);
 
-    return data;
+    return { status: response.status, data: response.data };
   };
 }

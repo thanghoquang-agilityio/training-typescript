@@ -1,140 +1,212 @@
 import { MovieModel } from '@/models';
 import { MovieView } from '@/views';
 import { renderSidebar, renderNavbar, renderMovieList, renderMovieDetail } from '@/templates';
-import { Movie } from '@/interfaces';
-import { disableElement, enableElement } from '@/utils/prevent';
-import { MovieGenre } from '@/enums';
+import { Movie, MovieData } from '@/interfaces';
+import { MovieGenre, StatusCode } from '@/enums';
 import { ROUTES, USER_ID, MOVIE_FIELD, TOP_TRENDING_LIMIT } from '@/constants';
 
 export class MovieController {
   model: MovieModel;
   view: MovieView;
+  movieData: MovieData;
+  pathname: string;
 
   constructor(model: MovieModel, view: MovieView) {
     this.model = model;
     this.view = view;
+    this.movieData = {
+      trending: [],
+      favourites: [],
+      continueWatching: [],
+    };
 
-    const pathname = window.location.pathname;
+    this.pathname = window.location.pathname;
 
-    renderSidebar(pathname);
+    renderSidebar(this.pathname);
     renderNavbar();
 
-    this.displayMovieList(pathname);
+    this.initData(this.pathname);
   }
 
-  private displayMovieList = async (path: string) => {
-    let trendingMovieList: Movie[] = [];
+  private initData = async (path: string) => {
+    let response;
 
     switch (path) {
       case ROUTES.homePage:
-        trendingMovieList = await this.model.getMovieList(TOP_TRENDING_LIMIT);
-        const continueWatchingMovieList = await this.model.getMoviesByField(
-          MOVIE_FIELD.incompleteness,
-          USER_ID,
-        );
+        response = await this.model.getMoviesByField({
+          field: MOVIE_FIELD.incompleteness,
+          value: USER_ID,
+          like: true,
+        });
 
-        renderMovieList(trendingMovieList, MovieGenre.Trending);
-        renderMovieList(continueWatchingMovieList, MovieGenre.ContinueWatching);
+        if (response.status === StatusCode.Ok) {
+          this.movieData.continueWatching = response.data;
+        }
 
-        this.view.bindAddOrRemoveFavouritesEvent(this.updateMovieInFavourites);
+        response = await this.model.getMoviesByField({
+          field: MOVIE_FIELD.isTrending,
+          value: true,
+          like: false,
+          limit: TOP_TRENDING_LIMIT,
+        });
+
+        if (response.status === StatusCode.Ok) {
+          this.movieData.trending = response.data;
+        }
+
         break;
 
       case ROUTES.favouritesPage:
-        const favouritesMovieList = await this.model.getMoviesByField(
-          MOVIE_FIELD.favourites,
-          USER_ID,
-          true,
-        );
+        response = await this.model.getMoviesByField({
+          field: MOVIE_FIELD.favourites,
+          value: USER_ID,
+          like: true,
+        });
 
-        renderMovieList(favouritesMovieList, MovieGenre.Favourites);
-
-        this.view.bindAddOrRemoveFavouritesEvent(this.removeMovieInFavourites);
-
+        if (response.status === StatusCode.Ok) {
+          this.movieData.favourites = response.data;
+        }
+        
         break;
 
       case ROUTES.trendingPage:
       default: {
-        trendingMovieList = await this.model.getMovieList(TOP_TRENDING_LIMIT);
+        response = await this.model.getMoviesByField({
+          field: MOVIE_FIELD.isTrending,
+          value: true,
+          like: false,
+          limit: TOP_TRENDING_LIMIT,
+        });
 
-        renderMovieList(trendingMovieList, MovieGenre.Trending);
+        if (response.status === StatusCode.Ok) {
+          this.movieData.trending = response.data;
+        }
 
-        this.view.bindAddOrRemoveFavouritesEvent(this.updateMovieInFavourites);
+        break;
+      }
+    }
+
+    this.displayMovieList(path);
+  };
+
+  private displayMovieList = async (path: string) => {
+    switch (path) {
+      case ROUTES.homePage:
+        renderMovieList(this.movieData.trending, MovieGenre.Trending);
+        renderMovieList(this.movieData.continueWatching, MovieGenre.ContinueWatching);
+
+        this.view.getMovieIdByMovieButton(this.updateFavourites);
+        break;
+
+      case ROUTES.favouritesPage:
+        renderMovieList(this.movieData.favourites, MovieGenre.Favourites);
+
+        this.view.getMovieIdByMovieButton(this.removeMovieInFavourites);
+        break;
+
+      case ROUTES.trendingPage:
+      default: {
+        renderMovieList(this.movieData.trending, MovieGenre.Trending);
+
+        this.view.getMovieIdByMovieButton(this.updateFavouritesTrending);
+        this.view.getMovieIdByMovieCard(this.displayMovieDetail);
         break;
       }
     }
   };
 
   /**
-   * Handles the addition of a movie.
+   * Handles the change of favourites movie
    * @param {string} movieId - The ID of the movie to be updated in favourites page.
-   * @param {HTMLElement} targetElement - The movie was clicked.
    */
-  private updateMovieInFavourites = async (
-    movieId: string,
-    favouritesList: string[],
-    targetElement: HTMLElement,
-  ) => {
-    const parentFigure = targetElement.closest('figure') as HTMLElement;
+  private updateFavourites = async (movieId: string, movieGenre: keyof MovieData) => {
+    const movie: Movie | undefined = this.movieData[movieGenre].find(
+      (movie: Movie) => movie.id.toString() === movieId,
+    );
+    let favourites: string[] = [];
 
-    parentFigure.classList.add('card-loading');
-
-    let updatedFavouritesList: string[] = favouritesList;
+    if (movie) {
+      favourites = movie.favourites;
+    }
 
     // Check like or dislike movie
-    if (favouritesList.includes(USER_ID)) {
-      updatedFavouritesList = favouritesList.filter((item) => !USER_ID.includes(item));
+    if (favourites.includes(USER_ID)) {
+      favourites = favourites.filter((item) => !USER_ID.includes(item));
     } else {
-      if (!updatedFavouritesList) {
-        updatedFavouritesList = [USER_ID];
+      if (favourites.length) {
+        favourites = [USER_ID];
       } else {
-        favouritesList.push(USER_ID);
-        updatedFavouritesList = favouritesList;
+        favourites.push(USER_ID);
       }
     }
 
-    const data = {
-      favourites: updatedFavouritesList,
-    };
+    if (movie) {
+      movie.favourites = favourites;
 
-    // Call API update favourites
-    const response = await this.model.updateMovie(movieId, data);
-    let iconButtonMovie = targetElement.closest('img');
+      // Call API update favourites
+      const response = await this.model.updateMovie(movieId, movie);
 
-    if (!iconButtonMovie) iconButtonMovie = targetElement.querySelector('img');
+      // Check update success or failed for update movie data
+      if (response.status === StatusCode.Ok && movieGenre !== MovieGenre.Favourites) {
+        this.movieData[movieGenre].forEach((movie: Movie) => {
+          if (movie.id.toString() === movieId) {
+            movie.favourites = favourites;
+          }
+        });
 
-    // Check update success or failed
-    if (iconButtonMovie) {
-      if (response.favourites.includes(USER_ID)) {
-        iconButtonMovie.setAttribute('src', './icons/heart-full.svg');
-      } else {
-        iconButtonMovie.setAttribute('src', './icons/heart.svg');
+        this.displayMovieList(this.pathname);
       }
-      parentFigure.setAttribute('data-favourites', response.favourites.join(','));
     }
-
-    parentFigure.classList.remove('card-loading');
   };
 
   /**
-   * Handles the deletion of a movie.
+   * Handles the deletion of a movie in favourites page.
    * @param {string} movieId - The ID of the movie to be removed in favourites page.
-   * @param {HTMLElement} targetElement - The movie was clicked.
    */
-  private removeMovieInFavourites = async (
-    movieId: string,
-    favouritesList: string[],
-    targetElement: HTMLElement,
-  ) => {
-    await this.updateMovieInFavourites(movieId, favouritesList, targetElement);sssssssssssssssss
+  private removeMovieInFavourites = async (movieId: string, movieGenre: keyof MovieData) => {
+    await this.updateFavourites(movieId, movieGenre);
 
-    const favouritesMovieList = await this.model.getMoviesByField(
-      MOVIE_FIELD.favourites,
-      USER_ID,
-      true,
+    this.movieData.favourites = this.movieData.favourites.filter(
+      (movie) => movie.id.toString() !== movieId,
     );
 
-    renderMovieList(favouritesMovieList, MovieGenre.Favourites);
+    this.displayMovieList(this.pathname);
+  };
 
-    this.view.bindAddOrRemoveFavouritesEvent(this.removeMovieInFavourites);
+  /**
+   * Handles the display movie detail
+   * @param {string} movieId - The ID of the movie to be displayed detail in trending page.
+   */
+  private displayMovieDetail = async (movieId: string) => {
+    // Call API get movie by id
+    const response = await this.model.getMovieById(movieId);
+
+    if (response.status === StatusCode.Ok) {
+      renderMovieDetail(response.data);
+    }
+  };
+
+  /**
+   * Handles the change of favourites movie
+   * @param {string} movieId - The ID of the movie to be updated in favourites page.
+   */
+  private updateFavouritesTrending = async (movieId: string, movieGenre: keyof MovieData) => {
+    this.view.addLoadingForMovieDetail();
+    await this.updateFavourites(movieId, movieGenre);
+
+    const imageDetailElement: HTMLElement | null = document.querySelector(
+      '.card-details-cover-image',
+    );
+
+    // Check movie detail was displayed
+    if (imageDetailElement) {
+      const movie = this.movieData.trending.find((movie: Movie) => movie.id.toString() === movieId);
+
+      if (movie) {
+        renderMovieDetail(movie);
+      }
+
+      this.view.updateLoadingForMovieDetail(movieId);
+    }
   };
 }

@@ -11,10 +11,13 @@ export interface Movie {
   video: string;
   duration?: string;
   description: string;
+  isTrending: boolean;
   favourites: string[];
   incompleteness: string[];
 }
 
-export interface MovieFavourites {
-  favourites: string[];
+export interface MovieData {
+  trending: Movie[];
+  favourites: Movie[];
+  continueWatching: Movie[];
 }

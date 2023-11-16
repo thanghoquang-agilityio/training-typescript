@@ -12,8 +12,15 @@ const instance: AxiosInstance = axios.create({
 });
 
 instance.interceptors.response.use(
-  <T>(value: AxiosResponse<T>): Promise<T> => Promise.resolve(value?.data),
-  <T>(error: AxiosError<T>): Promise<T> => Promise.reject(error?.response?.data),
+  <T>(value: AxiosResponse<T>): AxiosResponse<T> => {
+    return value;
+  },
+  <T>(error: AxiosError<T>): Promise<{ statusCode: number; data: T }> => {
+    return Promise.reject({
+      statusCode: error.status,
+      data: error?.response?.data,
+    });
+  },
 );
 
 export default instance;

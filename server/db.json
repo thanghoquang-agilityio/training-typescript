@@ -1,7 +1,7 @@
 {
   "movies": [
     {
-      "id": ["1"],
+      "id": 1,
       "title": "Tokyo Train",
       "image": "./images/tokyo-train.png",
       "category": "Movies",
@@ -11,7 +11,7 @@
       "video": "link",
       "duration": "2h 14m",
       "description": "It's possible that this movie might have been released or gained prominence after that time or might be a more independent or lesser-known production.",
-      "favourites": ["5", "6"],
+      "favourites": ["1"],
       "incompleteness": []
     },
     {
@@ -39,7 +39,7 @@
       "video": "link",
       "duration": "3h 00m",
       "description": "Paris, being a city with immense cultural richness and a long history, has been the backdrop for numerous films and documentaries showcasing different aspects of life, whether it's the romance of the city, its cultural heritage, or the everyday lives of its residents.",
-      "favourites": ["1"],
+      "favourites": [],
       "incompleteness": []
     },
     {
@@ -53,7 +53,7 @@
       "video": "update_later",
       "duration": "2h 38m",
       "description": "The movie follows the lives of a wealthy family, the Johnsons, who appear to have it all: a grand mansion, luxurious cars, and expensive designer clothing. However, behind the facade of their lavish lifestyle, there are deep-seated tensions and secrets that threaten to tear the family apart.",
-      "favourites": ["4", "1"],
+      "favourites": ["1"],
       "incompleteness": []
     },
     {
@@ -81,7 +81,7 @@
       "video": "update_later",
       "duration": "4h 12m",
       "description": "Studying galaxies is crucial in the field of astronomy as it provides insights into the universe's evolution, structure, and composition. Understanding different types of galaxies and their behaviors helps scientists comprehend the vast expanse of the cosmos, the formation of stars and planetary systems, and the distribution of dark matter.",
-      "favourites": [],
+      "favourites": ["1"],
       "incompleteness": ["1"]
     },
     {
@@ -109,7 +109,7 @@
       "video": "update_later",
       "duration": "4h 12m",
       "description": "Studying galaxies is crucial in the field of astronomy as it provides insights into the universe's evolution, structure, and composition. Understanding different types of galaxies and their behaviors helps scientists comprehend the vast expanse of the cosmos, the formation of stars and planetary systems, and the distribution of dark matter.",
-      "favourites": [],
+      "favourites": ["1"],
       "incompleteness": ["1"]
     }
   ]

@@ -54,11 +54,11 @@
 }
 
 .sidebar-information .text {
-  pointer-events: none;
+  cursor: not-allowed;
 }
 
 .sidebar-account .text {
-  pointer-events: none;
+  cursor: not-allowed;
 }
 
 .sidebar-actions .sidebar-active {

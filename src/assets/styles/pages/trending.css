@@ -5,3 +5,27 @@
 .trending-now {
   margin: 56px 42px auto 32px;
 }
+
+.trending-now-after-loading .card-trending {
+  opacity: 0.3;
+}
+
+.trending-now-after-loading .button-heart-card {
+  pointer-events: none;
+}
+
+.trending-now-after-loading .card-being-displayed {
+  opacity: 1;
+}
+
+.trending-now-after-loading .card-being-displayed .card-img {
+  pointer-events: none;
+}
+
+.trending-now-after-loading .card-being-displayed .button-heart-card {
+  pointer-events: unset;
+}
+
+.trending-now-after-loading .card-loading {
+  opacity: 0.8;
+}
