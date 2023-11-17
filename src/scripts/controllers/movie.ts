@@ -3,6 +3,7 @@ import { MovieView } from '@/views';
 import { renderSidebar, renderNavbar, renderMovieList, renderMovieDetail } from '@/templates';
 import { Movie, MovieData } from '@/interfaces';
 import { MovieGenre, StatusCode } from '@/enums';
+import { Category } from '@/types';
 import { ROUTES, USER_ID, MOVIE_FIELD, TOP_TRENDING_LIMIT } from '@/constants';
 
 export class MovieController {
@@ -25,9 +26,14 @@ export class MovieController {
     renderSidebar(this.pathname);
     renderNavbar();
 
+    this.view.filterMovie(this.filterMovieData);
     this.initData(this.pathname);
   }
 
+  /**
+   * Handles create data of the page is displayed
+   * @param {string} path - The page is displayed.
+   */
   private initData = async (path: string) => {
     let response;
 
@@ -89,6 +95,10 @@ export class MovieController {
     this.displayMovieList(path);
   };
 
+  /**
+   * Handles render data of the page is displayed
+   * @param {string} path - The page is displayed.
+   */
   private displayMovieList = async (path: string) => {
     switch (path) {
       case ROUTES.homePage:
@@ -113,6 +123,8 @@ export class MovieController {
         break;
       }
     }
+
+    this.view.removeLoading();
   };
 
   /**
@@ -133,7 +145,7 @@ export class MovieController {
     if (favourites.includes(USER_ID)) {
       favourites = favourites.filter((item) => !USER_ID.includes(item));
     } else {
-      if (favourites.length) {
+      if (!favourites.length) {
         favourites = [USER_ID];
       } else {
         favourites.push(USER_ID);
@@ -182,8 +194,18 @@ export class MovieController {
     const response = await this.model.getMovieById(movieId);
 
     if (response.status === StatusCode.Ok) {
-      renderMovieDetail(response.data);
+      this.renderDetail(response.data);
     }
+  };
+
+  /**
+   * Handles render data of the movie is displayed
+   * @param {string} movie - The movie is displayed.
+   */
+  private renderDetail = (movie: Movie) => {
+    renderMovieDetail(movie);
+
+    this.view.getMovieIdByHeartButton(this.updateFavouriteDetail);
   };
 
   /**
@@ -191,22 +213,97 @@ export class MovieController {
    * @param {string} movieId - The ID of the movie to be updated in favourites page.
    */
   private updateFavouritesTrending = async (movieId: string, movieGenre: keyof MovieData) => {
-    this.view.addLoadingForMovieDetail();
-    await this.updateFavourites(movieId, movieGenre);
+    const hasDetail: boolean = this.view.getImageDetailElement();
 
-    const imageDetailElement: HTMLElement | null = document.querySelector(
-      '.card-details-cover-image',
-    );
-
-    // Check movie detail was displayed
-    if (imageDetailElement) {
+    if (hasDetail) {
       const movie = this.movieData.trending.find((movie: Movie) => movie.id.toString() === movieId);
 
+      this.view.addLoadingMovieButton();
+      await this.updateFavourites(movieId, movieGenre);
+
       if (movie) {
-        renderMovieDetail(movie);
+        this.renderDetail(movie);
       }
 
-      this.view.updateLoadingForMovieDetail(movieId);
+      this.view.updateLoadingFavourites(movieId);
+    } else {
+      await this.updateFavourites(movieId, movieGenre);
     }
+  };
+
+  /**
+   * Handles the change of favourites movie
+   * @param {string} movieId - The ID of the movie to be updated in favourites page.
+   */
+  private updateFavouriteDetail = async (movieId: string) => {
+    const movieGenre: keyof MovieData = MovieGenre.Trending;
+    const movie: Movie | undefined = this.movieData[movieGenre].find(
+      (movie: Movie) => movie.id.toString() === movieId,
+    );
+
+    this.view.addLoadingHeartButton();
+
+    await this.updateFavourites(movieId, movieGenre);
+
+    if (movie) {
+      this.renderDetail(movie);
+    }
+
+    this.view.updateLoadingFavourites(movieId);
+  };
+
+  private filterMovieData = async (filter: string) => {
+    let response;
+    filter = filter.charAt(0).toUpperCase() + filter.slice(1);
+
+    const category: Category = filter as Category;
+
+    switch (this.pathname) {
+      case ROUTES.homePage:
+        response = await this.model.filterMovies({ category: category, incompleteness: USER_ID });
+
+        if (response.status === StatusCode.Ok) {
+          this.movieData.continueWatching = response.data;
+        }
+
+        response = await this.model.getMoviesByField({
+          field: MOVIE_FIELD.category,
+          value: filter,
+          like: false,
+          limit: TOP_TRENDING_LIMIT,
+        });
+
+        if (response.status === StatusCode.Ok) {
+          this.movieData.trending = response.data;
+        }
+
+        break;
+
+      case ROUTES.favouritesPage:
+        response = await this.model.filterMovies({ category: category, favourites: USER_ID });
+
+        if (response.status === StatusCode.Ok) {
+          this.movieData.favourites = response.data;
+        }
+
+        break;
+
+      case ROUTES.trendingPage:
+      default:
+        response = await this.model.getMoviesByField({
+          field: MOVIE_FIELD.category,
+          value: filter,
+          like: false,
+          limit: TOP_TRENDING_LIMIT,
+        });
+
+        if (response.status === StatusCode.Ok) {
+          this.movieData.trending = response.data;
+        }
+
+        break;
+    }
+
+    this.displayMovieList(this.pathname);
   };
 }

@@ -49,6 +49,10 @@
   margin-bottom: 85px;
 }
 
+.sidebar-pages li:last-child a {
+  cursor: not-allowed;
+}
+
 .sidebar-information {
   margin-bottom: 220px;
 }

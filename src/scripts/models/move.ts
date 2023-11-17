@@ -1,7 +1,8 @@
 import axios from '@/utils/axios';
 
 import { Movie } from '@/interfaces';
-import { API_ENDPOINT } from '@/constants';
+import { Category } from '@/types';
+import { API_ENDPOINT, USER_ID } from '@/constants';
 
 export class MovieModel {
   /**
@@ -47,6 +48,31 @@ export class MovieModel {
         like ? '_like' : ''
       }=${value}`,
     );
+
+    return { status: response.status, data: response.data };
+  };
+
+  /**
+   * Fetches the list of movies with expanded movie manager information.
+   * @param {string} params - Optional query parameters.
+   * @returns {Promise<Movie[]>} A promise resolving to the list of movies.
+   */
+  filterMovies = async ({
+    category,
+    favourites,
+    incompleteness,
+  }: {
+    category: Category;
+    favourites?: string;
+    incompleteness?: string;
+  }): Promise<{ status: number; data: Movie[] }> => {
+    const response = await axios.get(API_ENDPOINT.MOVIES, {
+      params: {
+        category: category,
+        favourites_like: favourites,
+        incompleteness_like: incompleteness,
+      },
+    });
 
     return { status: response.status, data: response.data };
   };
