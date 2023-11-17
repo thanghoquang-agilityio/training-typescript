@@ -28,11 +28,19 @@
   height: 32px;
 }
 
+.navbar-actions img:first-of-type:hover {
+  cursor: pointer;
+}
+
+.navbar-actions img:last-of-type:hover {
+  cursor: not-allowed;
+}
+
 .profile-menu {
   display: flex;
   align-items: center;
   border: 1px solid rgba(34, 31, 29, 255);
-  cursor: pointer;
+  cursor: not-allowed;
 }
 
 .profile-menu:hover .text {

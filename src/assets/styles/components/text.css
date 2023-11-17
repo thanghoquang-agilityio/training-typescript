@@ -29,3 +29,9 @@
   text-align: left;
   color: var(--text-color-primary);
 }
+
+.text-empty {
+  display: none;
+  margin-top: 65px;
+  text-align: center;
+}

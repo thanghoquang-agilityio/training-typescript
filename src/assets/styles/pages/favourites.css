@@ -3,10 +3,12 @@
 }
 
 .favourites-wrapper {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 32px;
   margin-top: 24px;
+  min-height: 100px;
 }
 
 .favourites-wrapper img {

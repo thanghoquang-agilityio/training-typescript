@@ -1,6 +1,6 @@
 .loader {
   position: absolute;
-  top: 45%;
+  top: 50%;
   left: 50%;
   display: none;
   border: 5px solid var(--text-color-primary);
@@ -14,9 +14,9 @@
 
 @keyframes rotation {
   0% {
-    transform: rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
   }
   100% {
-    transform: rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }

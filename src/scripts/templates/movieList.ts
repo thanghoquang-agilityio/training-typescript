@@ -63,6 +63,24 @@ export const renderMovieList = (movieList: Movie[], movieGenre: MovieGenre) => {
   }
 
   if (movieListElement) {
-    movieListElement.innerHTML = movieListTemplate(movieList, movieGenre);
+    const parentSectionElement = movieListElement?.closest('section');
+    const textEmptyElement: HTMLElement | null = document.querySelector('.text-empty');
+
+    if (parentSectionElement) {
+      if (movieList.length) {
+        parentSectionElement.style.display = 'block';
+        movieListElement.innerHTML = movieListTemplate(movieList, movieGenre);
+      } else {
+        parentSectionElement.style.display = 'none';
+      }
+    }
+
+    if (textEmptyElement) {
+      if (movieList.length) {
+        textEmptyElement.style.display = 'none';
+      } else {
+        textEmptyElement.style.display = 'block';
+      }
+    }
   }
 };
