@@ -1,7 +1,7 @@
 import { Category } from '@/types';
 
 export interface Movie {
-  id: string;
+  id: number;
   title: string;
   image: string;
   category: Category;
@@ -9,12 +9,14 @@ export interface Movie {
   release: number;
   rating?: number;
   video: string;
-  duration?: string;
+  duration: string;
   description: string;
   isTrending: boolean;
-  favourites: string[];
-  incompleteness: string[];
+  favourites: number[];
+  incompleteness: number[];
 }
+
+export interface MovieForm extends Omit<Movie, 'id'> {}
 
 export interface MovieData {
   trending: Movie[];

@@ -72,3 +72,12 @@
 .continue-watching-wrapper figure {
   max-height: 207px;
 }
+
+.create-movie {
+  cursor: pointer;
+}
+
+.create-movie:hover {
+  width: 20px;
+  height: 20px;
+}

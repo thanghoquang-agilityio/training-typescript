@@ -7,3 +7,33 @@ export const snakeToCamel = (text: string): string => {
     .toLowerCase()
     .replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''));
 };
+
+export const snakeToStringAndCapitalize = (text: string): string => {
+  if (typeof text !== 'string' || !text.trim()) {
+    return '';
+  }
+
+  let newText = text
+    .toLowerCase()
+    .replace(/([-_][a-z])/g, (group) => group.replace('-', ' ').replace('_', ' '));
+  return newText.charAt(0).toUpperCase() + newText.slice(1);
+};
+
+export const formatDuration = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  const formattedHours = hours > 0 ? `${hours}h ` : '';
+  const formattedMinutes = minutes > 0 ? `${minutes.toString().padStart(2, '0')}m ` : '';
+  const formattedSeconds =
+    remainingSeconds > 0 ? `${remainingSeconds.toString().padStart(2, '0')}s` : '';
+
+  if (hours > 0) {
+    return `${formattedHours}${formattedMinutes}${formattedSeconds}`;
+  } else if (minutes > 0) {
+    return `${formattedMinutes}${formattedSeconds}`;
+  } else {
+    return `${formattedSeconds}`;
+  }
+};
