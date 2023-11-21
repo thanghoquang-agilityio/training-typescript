@@ -55,6 +55,30 @@
 
 .button-watch-movie:hover {
   font-weight: 700;
+  border: 1px solid var(--text-color-primary);
+}
+
+.button-cancel {
+  display: inline-flex;
+  align-items: flex-start;
+  margin-right: 16px;
+  border: 1px solid var(--text-color-primary);
+  border-radius: 14px;
+  padding: 16px 23px;
+  background: linear-gradient(99deg, var(--text-color-primary) 0.36%, rgba(3, 3, 3, 0) 111.16%);
+
+  /* text in button */
+  font-size: var(--font-size-md);
+  line-height: 20px;
+  font-family: var(--primary-medium-font);
+  font-weight: 500;
+  font-style: normal;
+  color: var(--text-color-primary);
+}
+
+.button-cancel:hover {
+  border: 1px solid var(--background-color-secondary);
+  font-weight: 700;
 }
 
 .button-back {

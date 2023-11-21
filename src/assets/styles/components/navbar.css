@@ -28,14 +28,6 @@
   height: 32px;
 }
 
-.navbar-actions img:first-of-type:hover {
-  cursor: pointer;
-}
-
-.navbar-actions img:last-of-type:hover {
-  cursor: not-allowed;
-}
-
 .profile-menu {
   display: flex;
   align-items: center;

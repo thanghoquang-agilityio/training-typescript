@@ -1,0 +1,99 @@
+.form-movie {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(8px);
+}
+
+.movie-form-container {
+  position: fixed;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: auto;
+  border: 1px solid var(--border-color-primary);
+  border-radius: 20px;
+  max-width: 600px;
+  max-height: 800px;
+  padding: 50px;
+  background-color: var(--background-color-tertiary);
+}
+
+.movie-form-container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.movie-form-container::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.movie-form-container .text-title-section {
+  text-align: center;
+}
+
+.movie-form {
+  position: relative;
+  margin: 0 auto;
+  padding: 16px 0;
+  width: 480px;
+}
+
+.movie-form-title {
+  padding-bottom: 20px;
+  text-align: center;
+  font-size: var(--font-size-4xl);
+  text-transform: uppercase;
+}
+
+.form-control-movie {
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.form-input-movie {
+  height: 48px;
+}
+
+.movie-member-input {
+  height: 70px;
+}
+
+.movie-description-input {
+  height: 64px;
+  padding-top: 12px;
+}
+
+.movie-file-input {
+  padding: 14px 0 0;
+  display: block;
+  width: fit-content;
+  border: none;
+}
+
+.form-control-description {
+  margin-bottom: 12px;
+}
+
+.form-control-file {
+  margin-bottom: 18px;
+}
+
+.image-preview {
+  display: none;
+  margin-bottom: 22px;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.movie-form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}

@@ -1,4 +1,4 @@
-const USER_ID = '1';
+const USER_ID = 1;
 
 const MOVIE_FIELD = {
   id: 'id',

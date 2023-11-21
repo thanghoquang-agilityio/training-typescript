@@ -27,7 +27,9 @@
         </section>
 
         <section class="trending-movie">
-          <h2 class="text-title-section">Trending</h2>
+          <h2 class="text-title-section">
+            Trending <img class="create-movie" src="../assets/icons/add.svg" alt="add-icon" />
+          </h2>
           <div class="trending-movie-wrapper card-loading movie-list">
             <span class="loader"></span>
           </div>
@@ -40,6 +42,148 @@
           </div>
         </section>
       </main>
+    </div>
+
+    <div class="form-movie">
+      <section class="movie-form-container">
+        <form id="movie-form" class="movie-form" action="/">
+          <h2 id="movie-form-title" class="text-title-section"></h2>
+
+          <!-- Title -->
+          <div class="form-control-movie">
+            <label class="form-label" for="title">
+              Title <span class="form-input-required">*</span>
+            </label>
+            <input
+              class="form-input-text form-input-movie"
+              id="title"
+              name="title,required"
+              type="text"
+              placeholder="Title"
+              value=""
+            />
+            <p class="input-error"></p>
+          </div>
+
+          <!-- Image -->
+          <div class="form-control-movie form-control-file">
+            <label class="form-label" for="image">
+              Image <span class="form-input-required">*</span>
+            </label>
+            <input
+              class="form-input-file form-input-movie movie-file-input"
+              id="image"
+              name="image,required"
+              type="file"
+              accept="image/*"
+              placeholder="Choose file"
+            />
+            <p class="input-error"></p>
+          </div>
+
+          <!-- Image preview -->
+          <img id="movie-image-preview" class="image-preview" src="#" alt="Image Preview" />
+
+          <!-- Category -->
+          <div class="form-control-movie">
+            <label class="form-label" for="category">
+              Category <span class="form-input-required">*</span>
+            </label>
+            <select
+              id="category"
+              name="category"
+              class="form-input-other form-input-movie"
+            ></select>
+          </div>
+
+          <!-- Type -->
+          <div class="form-control-movie">
+            <label class="form-label" for="type">
+              Type <span class="form-input-required">*</span>
+            </label>
+            <input
+              class="form-input-text form-input-movie"
+              id="type"
+              name="type,required"
+              type="text"
+              placeholder="Type Movie"
+              value=""
+            />
+            <p class="input-error"></p>
+          </div>
+
+          <div class="form-control-multiple">
+            <!-- Year of release -->
+            <div class="form-control-movie">
+              <label class="form-label" for="year-of-release">
+                Year of release <span class="form-input-required">*</span>
+              </label>
+              <input
+                class="form-input-text form-input-movie"
+                id="year-of-release"
+                name="year-of-release,required"
+                type="number"
+                value="2023"
+                placeholder="Year"
+                min="1890"
+                max="2023"
+              />
+              <p class="input-error"></p>
+            </div>
+
+            <!-- Trending -->
+            <div class="form-control-movie">
+              <label class="form-label" for="is-trending">
+                Trending <span class="form-input-required">*</span>
+              </label>
+              <select id="is-trending" name="is-trending" class="form-input-other form-input-movie">
+                <option selected value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Video -->
+          <div class="form-control-movie form-control-file">
+            <label class="form-label" for="video">
+              Video <span class="form-input-required">*</span>
+            </label>
+            <input
+              class="form-input-file form-input-movie movie-file-input"
+              id="video"
+              name="video,required"
+              type="file"
+              accept="video/*"
+              placeholder="Choose file"
+            />
+            <p class="input-error"></p>
+          </div>
+
+          <!-- Description -->
+          <div class="form-control-movie form-control-description">
+            <label class="form-label" for="description">
+              Description <span class="form-input-required">*</span>
+            </label>
+            <textarea
+              class="form-input-text form-input-movie movie-description-input"
+              id="description"
+              name="description,required"
+              type="text"
+              placeholder="Description"
+              maxlength="2000"
+              value=""
+            ></textarea>
+            <p class="input-error"></p>
+          </div>
+
+          <div class="movie-form-actions">
+            <button class="button-watch-movie" type="submit">Save</button>
+            <button id="btn-movie-cancel" class="button-cancel">Cancel</button>
+          </div>
+
+          <span class="loader"></span>
+        </form>
+      </section>
     </div>
   </body>
 </html>

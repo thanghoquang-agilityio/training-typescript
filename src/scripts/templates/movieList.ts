@@ -68,7 +68,7 @@ export const renderMovieList = (movieList: Movie[], movieGenre: MovieGenre) => {
 
     if (parentSectionElement) {
       if (movieList.length) {
-        parentSectionElement.style.display = 'block';
+        parentSectionElement.style.display = '';
         movieListElement.innerHTML = movieListTemplate(movieList, movieGenre);
       } else {
         parentSectionElement.style.display = 'none';
