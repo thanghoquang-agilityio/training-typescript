@@ -9,7 +9,7 @@ import { formatDuration } from './string';
  * @param {File} file - The File object to be converted.
  * @returns {Promise<string>} A Promise that resolves with the Base64-encoded string.
  */
-export const convertFileToBase64 = (file: File): Promise<string> =>
+export const convertFile = (file: File): Promise<string> =>
   new Promise((resolve) => {
     const reader = new FileReader();
 
@@ -30,13 +30,14 @@ export const getVideoDuration = (inputVideoElement: HTMLInputElement): Promise<C
   return new Promise((resolve) => {
     const myVideos: CustomFile[] = [];
     const files: FileList | null = inputVideoElement.files;
+    const hasFile = !files || !files[0];
 
-    if (!files || !files[0]) {
+    if (hasFile) {
       resolve(myVideos);
     } else {
       const currentFile = files[0] as CustomFile;
 
-      myVideos.push(files[0] as CustomFile);
+      myVideos.push(currentFile);
 
       const video = document.createElement('video');
       video.preload = 'metadata';
@@ -45,9 +46,11 @@ export const getVideoDuration = (inputVideoElement: HTMLInputElement): Promise<C
         window.URL.revokeObjectURL(video.src);
 
         const duration = video.duration;
+        const lastVideoNumber = myVideos.length - 1;
 
-        if (myVideos.length > 0) {
-          myVideos[myVideos.length - 1].duration = formatDuration(duration);
+        if (myVideos.length) {
+          myVideos[lastVideoNumber].duration = formatDuration(duration);
+
           resolve(myVideos);
         }
       };

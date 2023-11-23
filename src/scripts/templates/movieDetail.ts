@@ -15,14 +15,18 @@ const movieDetailTemplate = (movie: Movie): string => `
     <div class="card-details-information">
       <div class="card-details-title-rating">
         <h3 class="card-details-title">${movie.title}</h3>
-        <div class="card-details-rating">
-          <img
-            class="icon-card-details-rating"
-            src="./icons/star.svg"
-            alt="star-icon"
-          />
-          <p class="text-card">${movie.rating}/10</p>
-        </div>
+        ${
+          movie.rating
+            ? `<div class="card-details-rating">
+                <img
+                  class="icon-card-details-rating"
+                  src="./icons/star.svg"
+                  alt="star-icon"
+                />
+                <p class="text-card">${movie.rating}/10</p>
+              </div>`
+            : ''
+        }
       </div>
       <span class="text-card">${movie.release}</span>
       <span class="text-card">${movie.type}</span>

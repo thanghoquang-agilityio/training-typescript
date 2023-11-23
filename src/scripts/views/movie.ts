@@ -1,29 +1,42 @@
-import { resetErrors, validateForm } from '@/utils/validation';
-import { convertFileToBase64, getVideoDuration } from '@/utils/file';
-import { snakeToCamel } from '@/utils/string';
-import { Movie, MovieData, MovieForm } from '@/interfaces';
-import { Category } from '@/types';
-import { FORM_TITLES, NAVBAR_LIST } from '@/constants';
+import { resetErrors, validateForm, convertSnakeToCamel, extractFormData } from '@/utils';
+import { Movie, MovieData } from '@/interfaces';
+import { ERROR_MESSAGES, FORM_TITLES, NAVBAR_LIST } from '@/constants';
 
 export class MovieView {
-  public movieDetailElement: HTMLElement | null;
-  public trendingElement: HTMLElement | null;
-  public imageMovieDetailElement: HTMLElement | null;
-  public heartButtonMovieElement: NodeListOf<HTMLElement>;
-  public movieDisplayedElement: HTMLElement | null;
-  public movieListElement: NodeListOf<HTMLElement>;
-  public heartButtonDetailElement: HTMLElement | null;
-  public imageDetailElement: HTMLElement | null;
-  public categoryElement: HTMLElement | null;
-  public filterListElement: NodeListOf<HTMLElement>;
-  public loadingElement: NodeListOf<HTMLElement>;
-  public createMovieButtonElement: HTMLElement | null;
-  public divFormMovieElement: HTMLElement | null;
-  public formMovieElement: HTMLFormElement | null;
-  public categorySelectElement: HTMLSelectElement | null;
-  public formTitleElement: HTMLElement | null;
-  public cancelButtonFormElement: HTMLElement | null;
-  public submitButtonFormElement: HTMLElement | null;
+  private movieDetailElement: HTMLElement | null;
+  private trendingElement: HTMLElement | null;
+  private imageMovieDetailElement: HTMLElement | null;
+  private heartButtonMovieElement: NodeListOf<HTMLElement>;
+  private movieDisplayedElement: HTMLElement | null;
+  private movieListElement: NodeListOf<HTMLElement>;
+  private heartButtonDetailElement: HTMLElement | null;
+  private imageDetailElement: HTMLElement | null;
+  private categoryNavbarElement: HTMLElement | null;
+  private filterListElement: NodeListOf<HTMLElement>;
+  private loadingElement: NodeListOf<HTMLElement>;
+  private trendingMovieListElement: NodeListOf<HTMLElement>;
+
+  // Element of Form
+  private createMovieButtonElement: HTMLElement | null;
+  private divFormMovieElement: HTMLElement | null;
+  private formMovieElement: HTMLFormElement | null;
+  private categorySelectElement: HTMLSelectElement | null;
+  private formTitleElement: HTMLElement | null;
+  private cancelButtonFormElement: HTMLElement | null;
+  private submitButtonFormElement: HTMLElement | null;
+  private inputListFormElement: NodeListOf<HTMLInputElement>;
+
+  // Element of all field input in Form
+  private titleElement: HTMLInputElement | null;
+  private imageElement: HTMLInputElement | null;
+  private categoryElement: HTMLInputElement | null;
+  private typeElement: HTMLInputElement | null;
+  private yearElement: HTMLInputElement | null;
+  private videoElement: HTMLInputElement | null;
+  private descriptionElement: HTMLInputElement | null;
+  private imagePreviewElement: HTMLInputElement | null;
+  private videoPreviewElement: HTMLInputElement | null;
+  private videoClosetElement: HTMLElement | null;
 
   constructor() {
     // Initialize elements
@@ -35,16 +48,30 @@ export class MovieView {
     this.movieListElement = document.querySelectorAll<HTMLElement>('.card-img');
     this.heartButtonDetailElement = document.querySelector('.button-heart-movie');
     this.imageDetailElement = document.querySelector('.card-details-cover-image');
-    this.categoryElement = document.querySelector('.navbar-categories');
+    this.categoryNavbarElement = document.querySelector('.navbar-categories');
     this.filterListElement = document.querySelectorAll<HTMLElement>('.text');
     this.loadingElement = document.querySelectorAll<HTMLElement>('.card-loading');
+    this.trendingMovieListElement = document.querySelectorAll<HTMLElement>('.card-trending');
+
     this.createMovieButtonElement = document.querySelector('.create-movie');
     this.divFormMovieElement = document.querySelector('.form-movie');
-    this.formMovieElement = document.querySelector('#movie-form');
-    this.categorySelectElement = document.querySelector('#category');
-    this.formTitleElement = document.querySelector('#movie-form-title');
-    this.cancelButtonFormElement = document.querySelector('#btn-movie-cancel');
+    this.formMovieElement = document.getElementById('movie-form') as HTMLFormElement;
+    this.categorySelectElement = document.getElementById('category') as HTMLSelectElement;
+    this.formTitleElement = document.getElementById('movie-form-title');
+    this.cancelButtonFormElement = document.getElementById('btn-movie-cancel');
     this.submitButtonFormElement = document.querySelector('.create-movie');
+    this.inputListFormElement = document.querySelectorAll<HTMLInputElement>('input');
+
+    this.titleElement = document.getElementById('title') as HTMLInputElement;
+    this.imageElement = document.getElementById('image') as HTMLInputElement;
+    this.categoryElement = document.getElementById('category') as HTMLInputElement;
+    this.typeElement = document.getElementById('type') as HTMLInputElement;
+    this.yearElement = document.getElementById('year-of-release') as HTMLInputElement;
+    this.videoElement = document.getElementById('video') as HTMLInputElement;
+    this.descriptionElement = document.getElementById('description') as HTMLInputElement;
+    this.imagePreviewElement = document.getElementById('movie-image-preview') as HTMLInputElement;
+    this.videoPreviewElement = document.getElementById('movie-video-preview') as HTMLInputElement;
+    this.videoClosetElement = document.querySelector('video');
   }
 
   /**
@@ -71,7 +98,7 @@ export class MovieView {
               // Get movie genre in class name
               const classNameMovie = parentFigure.className.split(' ')[0];
 
-              movieGenre = snakeToCamel(
+              movieGenre = convertSnakeToCamel(
                 classNameMovie.split('-').slice(1).join('-'),
               ) as keyof MovieData;
             }
@@ -85,6 +112,9 @@ export class MovieView {
     }
   };
 
+  /**
+   * Add loading card movie when clicking favorite button in card movie
+   */
   addLoadingMovieButton = () => {
     // Add loading when movie detail was displayed
     if (this.movieDetailElement && this.imageMovieDetailElement) {
@@ -102,6 +132,9 @@ export class MovieView {
     }
   };
 
+  /**
+   * Add loading card movie when clicking favorite button in card details
+   */
   addLoadingHeartButton = () => {
     this.movieDisplayedElement = document.querySelector('.card-being-displayed');
 
@@ -113,6 +146,10 @@ export class MovieView {
     this.addLoadingMovieButton();
   };
 
+  /**
+   * Remove loading card movie when clicking favorite button
+   * @param {string} movieId - The id of movie.
+   */
   updateLoadingFavourites = (movieId: number) => {
     this.movieDisplayedElement = document.getElementById(movieId.toString());
 
@@ -134,7 +171,7 @@ export class MovieView {
 
   /**
    * Get movie Id when click movie card to show the details.
-   * @param {Function} handler - The show event handler function.
+   * @param {Function} handler - The change event handler function.
    */
   getMovieIdByMovieCard = (handler: (id: number) => void) => {
     this.trendingElement = document.querySelector('.trending-now');
@@ -144,7 +181,7 @@ export class MovieView {
 
       if (this.movieListElement.length) {
         this.movieListElement.forEach((element: HTMLElement) => {
-          element.addEventListener('click', (event: MouseEvent) => {
+          element.addEventListener('click', async (event: MouseEvent) => {
             const targetElement = event.target as HTMLElement;
 
             if (targetElement) {
@@ -187,7 +224,10 @@ export class MovieView {
                   this.trendingElement.classList.add('trending-now-after-loading');
                 }
 
-                this.movieDetailElement = document.querySelector('.card-details');
+                // Update style for movie detail
+                if (this.movieDetailElement) {
+                  this.movieDetailElement.classList.remove('card-loading');
+                }
               }
             }
           });
@@ -236,10 +276,10 @@ export class MovieView {
    * @param {Function} handler - The change event handler function.
    */
   filterMovie = (handler: (filter: string) => void) => {
-    this.categoryElement = document.querySelector('.navbar-categories');
+    this.categoryNavbarElement = document.querySelector('.navbar-categories');
 
-    if (this.categoryElement) {
-      this.filterListElement = this.categoryElement.querySelectorAll<HTMLElement>('.text');
+    if (this.categoryNavbarElement) {
+      this.filterListElement = this.categoryNavbarElement.querySelectorAll<HTMLElement>('.text');
 
       if (this.filterListElement.length) {
         this.filterListElement.forEach((filterElement: HTMLElement) => {
@@ -268,9 +308,6 @@ export class MovieView {
    * Remove movie detail.
    */
   private removeMovieDetail = () => {
-    this.movieDetailElement = document.querySelector('.card-details');
-    this.trendingElement = document.querySelector('.trending-now-after-loading');
-
     if (this.movieDetailElement) {
       this.movieDetailElement.innerHTML = '';
 
@@ -297,8 +334,6 @@ export class MovieView {
    * Add loading when loading movie list.
    */
   private addLoadingMovieList = () => {
-    this.loadingElement = document.querySelectorAll<HTMLElement>('.movie-list');
-
     if (this.loadingElement) {
       this.loadingElement.forEach((element: HTMLElement) => {
         element.innerHTML = '<span class="loader"></span>';
@@ -308,43 +343,108 @@ export class MovieView {
   };
 
   /**
-   * Populate a <select> element with options based on a list of participants.
+   * Populate a <select> element with options based on a list of NAVBAR_LIST.
    * @param {HTMLSelectElement} selectElement - The <select> element to populate.
    */
-  private populateSelectElement = (selectElement: HTMLSelectElement) => {
-    NAVBAR_LIST.forEach((item) => {
-      const option = document.createElement('option');
+  private addOption = (selectElement: HTMLSelectElement) => {
+    if (selectElement) {
+      NAVBAR_LIST.forEach((item) => {
+        const option = document.createElement('option');
 
-      option.textContent = item.title;
-      option.value = item.category.toString();
+        option.textContent = item.title;
+        option.value = item.category.toString();
 
-      selectElement.appendChild(option);
-    });
+        selectElement.appendChild(option);
+      });
+    }
   };
 
   /**
    * Display form create of movie.
+   * @param {Movie} movie - The movie may or may not be there.
    */
-  private displayFormMovie = (movie?: Movie) => {
-    this.divFormMovieElement = document.querySelector('.form-movie');
-    this.categorySelectElement = document.querySelector('#category');
-
+  displayFormMovie = (movie?: Movie) => {
     if (this.divFormMovieElement && this.categorySelectElement) {
-      this.divFormMovieElement.style.display = 'block';
-      this.populateSelectElement(this.categorySelectElement);
-
-      this.formTitleElement = document.querySelector('#movie-form-title');
+      this.divFormMovieElement.classList.add('display-block');
+      this.addOption(this.categorySelectElement);
 
       if (this.formTitleElement) {
         if (movie) {
           this.formTitleElement.textContent = FORM_TITLES.movieFormEdit;
+
+          if (this.titleElement) {
+            this.titleElement.value = movie.title;
+          }
+
+          if (this.imageElement && this.imagePreviewElement) {
+            this.imagePreviewElement.src = movie.image;
+            this.imagePreviewElement.classList.add('display-block');
+          }
+
+          if (this.categoryElement) {
+            this.categoryElement.value = movie.category.toLocaleLowerCase();
+          }
+
+          if (this.typeElement) {
+            this.typeElement.value = movie.type;
+          }
+
+          if (this.yearElement) {
+            this.yearElement.value = movie.release.toString();
+          }
+
+          if (this.videoElement && this.videoPreviewElement) {
+            this.videoPreviewElement.src = movie.video;
+
+            if (this.videoClosetElement) {
+              this.videoClosetElement.classList.add('display-block');
+            }
+          }
+
+          if (this.descriptionElement) {
+            this.descriptionElement.value = movie.description;
+          }
+
+          this.formTitleElement.setAttribute('movie-id', movie.id.toString());
+          this.formTitleElement.setAttribute('rating', movie.rating.toString());
+          this.formTitleElement.setAttribute('favourites', movie.favourites.toString());
+          this.formTitleElement.setAttribute('incompleteness', movie.incompleteness.toString());
         } else {
           this.formTitleElement.textContent = FORM_TITLES.movieFormCreate;
         }
+
+        this.addKeydownFormMovie();
+        this.closeFormByClickOutSide();
+        this.changeInputFile();
+        this.closeFormMovie();
       }
     }
+  };
 
-    this.closeFormMovie();
+  /**
+   * Update preview file in form movie.
+   */
+  private changeInputFile = () => {
+    if (this.videoElement) {
+      this.videoElement.addEventListener('change', () => {
+        if (this.videoClosetElement) {
+          this.videoClosetElement.classList.remove('display-block');
+        }
+
+        if (this.videoPreviewElement) {
+          this.videoPreviewElement.src = '#';
+        }
+      });
+    }
+
+    if (this.imageElement) {
+      this.imageElement.addEventListener('change', () => {
+        if (this.imagePreviewElement) {
+          this.imagePreviewElement.classList.remove('display-block');
+          this.imagePreviewElement.src = '#';
+        }
+      });
+    }
   };
 
   /**
@@ -357,12 +457,35 @@ export class MovieView {
       this.cancelButtonFormElement.addEventListener('click', (event: MouseEvent) => {
         event.preventDefault();
 
+        if (this.formMovieElement) {
+          this.formMovieElement.reset();
+        }
+
+        if (this.imagePreviewElement) {
+          this.imagePreviewElement.src = '#';
+          this.imagePreviewElement.classList.remove('display-block');
+        }
+
+        if (this.videoPreviewElement) {
+          this.videoPreviewElement.src = '#';
+
+          const videoParentElement = this.videoPreviewElement.closest('video');
+
+          if (videoParentElement) {
+            videoParentElement.classList.remove('display-block');
+          }
+        }
+
         if (this.divFormMovieElement) {
-          this.divFormMovieElement.style.display = 'none';
+          this.divFormMovieElement.classList.remove('display-block');
         }
 
         if (this.categorySelectElement) {
           this.categorySelectElement.innerHTML = '';
+        }
+
+        if (this.formMovieElement) {
+          this.formMovieElement.classList.remove('card-loading');
         }
 
         if (this.divFormMovieElement) {
@@ -377,11 +500,55 @@ export class MovieView {
    */
   displayCreateMovieForm = () => {
     this.createMovieButtonElement = document.querySelector('.create-movie');
-
     if (this.createMovieButtonElement) {
       this.createMovieButtonElement.addEventListener('click', () => {
         this.displayFormMovie();
+
+        if (this.imageElement) {
+          this.imageElement.setAttribute('rules', 'required');
+        }
+
+        if (this.videoElement) {
+          this.videoElement.setAttribute('rules', 'required');
+        }
       });
+    }
+  };
+
+  /**
+   * Display form create movie.
+   */
+  displayUpdateMovieForm = (handler: (movieId: number) => void) => {
+    this.trendingElement = document.querySelector('.trending-movie');
+
+    if (this.trendingElement) {
+      this.trendingMovieListElement =
+        this.trendingElement.querySelectorAll<HTMLElement>('.card-img');
+
+      if (this.trendingMovieListElement.length) {
+        this.trendingMovieListElement.forEach((movieUpdateElement) => {
+          movieUpdateElement.addEventListener('click', () => {
+            let movieId: string | null = null;
+            const parentFigureElement: HTMLElement | null = movieUpdateElement.closest('figure');
+
+            if (parentFigureElement) {
+              movieId = parentFigureElement.getAttribute('id');
+            }
+
+            if (movieId) {
+              handler(parseInt(movieId));
+            }
+
+            if (this.imageElement) {
+              this.imageElement.setAttribute('rules', '');
+            }
+
+            if (this.videoElement) {
+              this.videoElement.setAttribute('rules', '');
+            }
+          });
+        });
+      }
     }
   };
 
@@ -389,113 +556,132 @@ export class MovieView {
    * Submit form movie.
    * @param {Function} handler - The submit event handler function.
    */
-  getDataInMovieForm = (handler: (movieForm: MovieForm, id?: number) => void) => {
-    if (this.formTitleElement) {
-      if (this.divFormMovieElement) {
-        this.submitButtonFormElement =
-          this.divFormMovieElement.querySelector('.button-watch-movie');
+  getDataInMovieForm = (handler: (movie: Movie) => Promise<boolean | undefined>) => {
+    if (this.divFormMovieElement) {
+      this.submitButtonFormElement = this.divFormMovieElement.querySelector('.button-watch-movie');
 
-        if (this.submitButtonFormElement) {
-          this.submitButtonFormElement.addEventListener('click', async (event: MouseEvent) => {
-            let isValidForm = false;
-            if (this.divFormMovieElement && this.formMovieElement) {
-              event.preventDefault();
+      if (this.submitButtonFormElement) {
+        this.submitButtonFormElement.addEventListener('click', async (event: MouseEvent) => {
+          let isValidForm = false;
+          if (this.divFormMovieElement && this.formMovieElement) {
+            event.preventDefault();
 
-              this.formMovieElement.classList.add('card-loading');
+            this.formMovieElement.classList.add('card-loading');
 
-              resetErrors(this.divFormMovieElement);
-              isValidForm = validateForm(this.divFormMovieElement);
+            resetErrors(this.divFormMovieElement);
+            isValidForm = validateForm(this.divFormMovieElement);
 
-              if (isValidForm) {
-                this.formMovieElement = document.querySelector('#movie-form');
+            if (isValidForm) {
+              if (this.formMovieElement) {
+                const formData = new FormData(this.formMovieElement);
+                const movie = await extractFormData(formData);
 
-                if (this.formMovieElement) {
-                  const formData = new FormData(this.formMovieElement);
-                  const data = await this.extractFormData(formData);
+                if (this.formTitleElement) {
+                  const movieId = this.formTitleElement.getAttribute('movie-id');
+                  const rating = this.formTitleElement.getAttribute('rating');
+                  const favourites = this.formTitleElement.getAttribute('favourites');
+                  const incompleteness = this.formTitleElement.getAttribute('incompleteness');
 
-                  this.formTitleElement = document.querySelector('#movie-form-title');
+                  if (rating) {
+                    movie.rating = parseInt(rating);
+                  }
 
-                  if (this.formTitleElement) {
-                    const isCreate =
-                      this.formTitleElement.textContent === FORM_TITLES.movieFormCreate;
+                  if (favourites) {
+                    movie.favourites = favourites.split(',').map((item) => parseInt(item));
+                  }
 
-                    if (isCreate) {
-                      handler(data);
+                  if (incompleteness) {
+                    movie.incompleteness = incompleteness.split(',').map((item) => parseInt(item));
+                  }
+
+                  if (movieId) {
+                    movie.id = parseInt(movieId);
+
+                    if (this.imagePreviewElement) {
+                      if (this.imagePreviewElement.classList.contains('display-block')) {
+                        movie.image = this.imagePreviewElement.src;
+                      }
+                    }
+
+                    if (this.videoClosetElement && this.videoPreviewElement) {
+                      if (this.videoClosetElement.classList.contains('display-block')) {
+                        movie.video = this.videoPreviewElement.src;
+                      }
+                    }
+
+                    const isSuccess = await handler(movie);
+
+                    if (isSuccess && this.cancelButtonFormElement) {
+                      this.cancelButtonFormElement.click();
+
+                      if (this.categorySelectElement) {
+                        this.categorySelectElement.innerHTML = '';
+                      }
+                    } else {
+                      window.alert(ERROR_MESSAGES.create);
+                    }
+                  } else {
+                    const isSuccess = await handler(movie);
+
+                    if (isSuccess && this.cancelButtonFormElement) {
+                      this.cancelButtonFormElement.click();
+
+                      if (this.categorySelectElement) {
+                        this.categorySelectElement.innerHTML = '';
+                      }
+                    } else {
+                      window.alert(ERROR_MESSAGES.update);
                     }
                   }
                 }
               }
-
-              if (this.formMovieElement) {
-                this.formMovieElement.classList.remove('card-loading');
-              }
             }
-          });
-        }
+
+            if (this.formMovieElement) {
+              this.formMovieElement.classList.remove('card-loading');
+            }
+          }
+        });
       }
     }
   };
 
   /**
-   * Extract form data from a FormData object and convert it into a structured ProjectForm object.
-   *
-   * @param {FormData} formData - The FormData object containing the form input values.
-   * @returns {ProjectFormInputs} The structured form data.
+   * Close form movie when click outside form.
    */
-  async extractFormData(formData: FormData): Promise<MovieForm> {
-    const extractValue = (key: string) => (formData.get(key) as string).trim();
+  private closeFormByClickOutSide = () => {
+    if (this.divFormMovieElement) {
+      this.divFormMovieElement.addEventListener('click', (event: MouseEvent) => {
+        const targetElement = event.target as HTMLElement;
 
-    const getOptionalFileBase64 = async (key: string, defaultValue: string = '') => {
-      const file = formData.get(key) as File;
+        if (targetElement.classList.contains('form-movie')) {
+          if (this.cancelButtonFormElement) {
+            this.cancelButtonFormElement.click();
+          }
+        }
+      });
+    }
+  };
 
-      return file.size > 0 ? await convertFileToBase64(file) : defaultValue;
-    };
-
-    const imgBase64 = await getOptionalFileBase64('image,required');
-    const videoBase64 = await getOptionalFileBase64('video,required');
-
-    let duration = '';
-    const inputVideoElement = document.getElementById('video');
-
-    if (inputVideoElement) {
-      const video = await getVideoDuration(inputVideoElement as HTMLInputElement);
-
-      if (video.length && video[0].duration) {
-        duration = video[0].duration;
+  /**
+   * Add key down for form movie
+   */
+  private addKeydownFormMovie = () => {
+    document.addEventListener('keydown', (event) => {
+      const isEscape = event.key === 'Escape' || event.keyCode === 27;
+      if (isEscape) {
+        if (this.cancelButtonFormElement) {
+          this.cancelButtonFormElement.click();
+        }
       }
-    }
 
-    const yearOfReleaseString = formData.get('year-of-release,required') as string;
-    let yearOfReleaseNumber = new Date().getFullYear();
+      const isEnter = event.key === 'Enter' || event.keyCode === 13;
 
-    if (yearOfReleaseString) {
-      yearOfReleaseNumber = parseInt(yearOfReleaseString);
-    }
-
-    const isTrendingString = formData.get('is-trending') as string;
-    let isTrending = true;
-
-    if (isTrendingString) {
-      isTrending = Boolean(isTrendingString);
-    }
-
-    const ratingDefault = 0;
-    const favouritesDefault: number[] = [];
-    const incompletenessDefault: number[] = [];
-
-    return {
-      title: extractValue('title,required'),
-      image: imgBase64,
-      category: formData.get('category') as Category,
-      type: extractValue('type,required'),
-      release: yearOfReleaseNumber,
-      rating: ratingDefault,
-      video: videoBase64,
-      duration: duration,
-      isTrending: isTrending,
-      description: extractValue('description,required'),
-      favourites: favouritesDefault,
-      incompleteness: incompletenessDefault,
-    };
-  }
+      if (isEnter) {
+        if (this.submitButtonFormElement) {
+          this.submitButtonFormElement.click();
+        }
+      }
+    });
+  };
 }

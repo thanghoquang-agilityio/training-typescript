@@ -1,8 +1,8 @@
 import { MovieModel } from '@/models';
 import { MovieView } from '@/views';
 import { renderSidebar, renderNavbar, renderMovieList, renderMovieDetail } from '@/templates';
-import { Movie, MovieData, MovieForm } from '@/interfaces';
-import { MovieGenre, StatusCode } from '@/enums';
+import { Movie, MovieData } from '@/interfaces';
+import { MovieGenre, HttpStatusCodes } from '@/enums';
 import { Category } from '@/types';
 import { ROUTES, USER_ID, MOVIE_FIELD, TOP_TRENDING_LIMIT } from '@/constants';
 
@@ -45,7 +45,7 @@ export class MovieController {
           like: true,
         });
 
-        if (response.status === StatusCode.Ok) {
+        if (response.status === HttpStatusCodes.OK) {
           this.movieData.continueWatching = response.data;
         }
 
@@ -56,7 +56,7 @@ export class MovieController {
           limit: TOP_TRENDING_LIMIT,
         });
 
-        if (response.status === StatusCode.Ok) {
+        if (response.status === HttpStatusCodes.OK) {
           this.movieData.trending = response.data;
         }
 
@@ -69,7 +69,7 @@ export class MovieController {
           like: true,
         });
 
-        if (response.status === StatusCode.Ok) {
+        if (response.status === HttpStatusCodes.OK) {
           this.movieData.favourites = response.data;
         }
         
@@ -84,7 +84,7 @@ export class MovieController {
           limit: TOP_TRENDING_LIMIT,
         });
 
-        if (response.status === StatusCode.Ok) {
+        if (response.status === HttpStatusCodes.OK) {
           this.movieData.trending = response.data;
         }
 
@@ -107,6 +107,7 @@ export class MovieController {
 
         this.view.getMovieIdByMovieButton(this.updateFavourites);
         this.view.displayCreateMovieForm();
+        this.view.displayUpdateMovieForm(this.displayMovieUpdate);
         this.view.getDataInMovieForm(this.submitMovieForm);
         break;
 
@@ -162,7 +163,7 @@ export class MovieController {
       const response = await this.model.updateMovie(movieId, movie);
 
       // Check update success or failed for update movie data
-      if (response.status === StatusCode.Ok && movieGenre !== MovieGenre.Favourites) {
+      if (response.status === HttpStatusCodes.OK && movieGenre !== MovieGenre.Favourites) {
         this.movieData[movieGenre].forEach((movie: Movie) => {
           if (movie.id === movieId) {
             movie.favourites = favourites;
@@ -195,7 +196,7 @@ export class MovieController {
     // Call API get movie by id
     const response = await this.model.getMovieById(movieId);
 
-    if (response.status === StatusCode.Ok) {
+    if (response.status === HttpStatusCodes.OK) {
       this.renderDetail(response.data);
     }
   };
@@ -261,31 +262,26 @@ export class MovieController {
    */
   private filterMovieData = async (filterValue: string) => {
     let response;
-    let filterText = '';
 
-    if (filterValue) {
-      filterText = filterValue.charAt(0).toUpperCase() + filterValue.slice(1);
-    }
-
-    const category: Category = filterText as Category;
+    const category: Category = filterValue as Category;
 
     switch (this.pathname) {
       case ROUTES.homePage:
         response = await this.model.filterMovies({ category: category, incompleteness: USER_ID });
 
-        if (response.status === StatusCode.Ok) {
+        if (response.status === HttpStatusCodes.OK) {
           this.movieData.continueWatching = response.data;
         }
 
-        if (filterText) {
+        if (filterValue) {
           response = await this.model.getMoviesByField({
             field: MOVIE_FIELD.category,
-            value: filterText,
+            value: filterValue,
             like: false,
             limit: TOP_TRENDING_LIMIT,
           });
 
-          if (response.status === StatusCode.Ok) {
+          if (response.status === HttpStatusCodes.OK) {
             this.movieData.trending = response.data;
           }
         }
@@ -295,7 +291,7 @@ export class MovieController {
       case ROUTES.favouritesPage:
         response = await this.model.filterMovies({ category: category, favourites: USER_ID });
 
-        if (response.status === StatusCode.Ok) {
+        if (response.status === HttpStatusCodes.OK) {
           this.movieData.favourites = response.data;
         }
 
@@ -303,15 +299,15 @@ export class MovieController {
 
       case ROUTES.trendingPage:
       default:
-        if (filterText) {
+        if (filterValue) {
           response = await this.model.getMoviesByField({
             field: MOVIE_FIELD.category,
-            value: filterText,
+            value: filterValue,
             like: false,
             limit: TOP_TRENDING_LIMIT,
           });
 
-          if (response.status === StatusCode.Ok) {
+          if (response.status === HttpStatusCodes.OK) {
             this.movieData.trending = response.data;
           }
         }
@@ -322,14 +318,59 @@ export class MovieController {
     this.displayMovieList(this.pathname);
   };
 
-  submitMovieForm = async (movieForm: MovieForm, id?: number) => {
-    if (id) {
-      // TODO update movie
-    } else {
-      const response = await this.model.createMovie(movieForm);
+  /**
+   * Handles the display movie in form
+   * @param {number} movieId - The ID of the movie to be displayed detail in form.
+   */
+  private displayMovieUpdate = async (movieId: number) => {
+    // Call API get movie by id
+    const movieIndex = this.movieData.trending.findIndex((movie: Movie) => movie.id === movieId);
+    const movie = this.movieData.trending[movieIndex];
 
-      if (response.status === StatusCode.Created) {
-        window.location.href = ROUTES.homePage;
+    this.view.displayFormMovie(movie);
+  };
+
+  /**
+   * Handles submit form movie
+   * @param {Movie} movie - data from form.
+   * @returns {Promise<boolean | undefined>}  A promise resolving to the boolean.
+   */
+  submitMovieForm = async (movie: Movie): Promise<boolean | undefined> => {
+    if (movie.id) {
+      const response = await this.model.updateMovie(movie.id, movie);
+
+      if (response.status === HttpStatusCodes.OK) {
+        if (response.data.isTrending) {
+          const movieIndex = this.movieData.trending.findIndex(
+            (movie: Movie) => movie.id === response.data.id,
+          );
+
+          this.movieData.trending[movieIndex] = response.data;
+        } else {
+          this.movieData.trending = this.movieData.trending.filter(
+            (item) => item.id !== response.data.id,
+          );
+        }
+
+        this.displayMovieList(this.pathname);
+
+        return true;
+      }
+    } else {
+      const response = await this.model.createMovie(movie);
+
+      if (response.status === HttpStatusCodes.Created) {
+        if (response.data.isTrending) {
+          if (this.movieData.trending.length > TOP_TRENDING_LIMIT) {
+            this.movieData.trending.pop();
+          }
+
+          this.movieData.trending.push(response.data);
+
+          this.displayMovieList(this.pathname);
+        }
+
+        return true;
       }
     }
   };
