@@ -7,7 +7,7 @@ export interface Movie {
   category: Category;
   type: string;
   release: number;
-  rating?: number;
+  rating: number;
   video: string;
   duration: string;
   description: string;
@@ -15,8 +15,6 @@ export interface Movie {
   favourites: number[];
   incompleteness: number[];
 }
-
-export interface MovieForm extends Omit<Movie, 'id'> {}
 
 export interface MovieData {
   trending: Movie[];

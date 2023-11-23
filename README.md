@@ -7,7 +7,7 @@
 
 ## Timeline
 
-- 14 working days
+- 17 working days
 
 ## Team size
 
@@ -19,25 +19,19 @@
 
 - Get familiar with and understand the power of the TypeScript language
 
-- Understanding and applying MVC (or any MV model or module concept) (optional)
+- Understanding and applying MVC
 
 - DOM manipulation and form validation
 
-- Understand how asynchronous code works and apply it in practice (API calls or any place we can mock APIs in code)
+- Understand how asynchronous code works and apply it in practice
 
 - Get familiar with DevTools
-
-- Apply localStorage
-
-- Apply Cypress for testing practice
 
 ## Prerequisites
 
 - node: v18.16.1
 
 - npm: v9.8.0
-
-- cypress: v13.3.0
 
 ## Technical Stack
 
@@ -49,13 +43,49 @@
 
 - MVC
 
-- LocalStorage
-
 - Parcel
 
-## [Requirements](https://docs.google.com/document/d/1dWScri9rZZ3cINuATcL-IGf5s6j9YgM9dUL49JXziKY/edit)
+## Requirements
 
-## [Task Management](https://trello.com/b/q49E7wwT/js-ts-training)
+[Plan training](https://docs.google.com/document/d/1dWScri9rZZ3cINuATcL-IGf5s6j9YgM9dUL49JXziKY/edit)
+
+- Home Page
+
+  - User can view any movie cards which are on the top trending
+
+  - User can view a list of movie cards that have not yet been finished watching before
+
+  - User can like or dislike any of the movie card displayed
+
+  - User can filter movie cards which are on the top trending or have not yet been finished watching before by category
+
+  - Additional functions:
+
+    - User can create a new movie card
+
+    - User can update the movie cards which are on the top trending
+
+- Favourites Page
+
+  - Users can view any favorite movie cards
+
+  - User can dislike any of the movie card displayed
+
+  - User can filter favorite movie cards by category
+
+- Trending Page
+
+  - User can view any movie cards which are on the top trending
+
+  - User can view movie details when clicking any movie cards displayed
+
+  - User can like or dislike any of the movie card displayed
+
+  - User can filter movie cards which are on the top trending by category
+
+## Task Management
+
+[Trello](https://trello.com/b/q49E7wwT/js-ts-training)
 
 ## Getting started
 
@@ -73,13 +103,17 @@
 
   `API_URL = "http://localhost:3000/"`
 
-- Step 5: Install package `yarn install`
+- Step 5: Open terminal, cd server
 
-- Step 6: Run server `yarn start:server`
+- Step 6: Install package `yarn install`
 
-- Step 7: Run client `yarn start`
+- Step 7: Run server `yarn start`
 
-- Step 8: Open <http://localhost:1234/> in your browser to see the HTML file.
+- Step 8: Open new terminal in folder `typescript-training`, install package `yarn install`
+
+- Step 9: Run client `yarn start`
+
+- Step 10: Open <http://localhost:1234/> in your browser to see the HTML file.
 
 ## Author
 

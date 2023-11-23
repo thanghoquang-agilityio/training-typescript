@@ -19,6 +19,7 @@
   border: 1px solid var(--border-color-primary);
   border-radius: 20px;
   max-width: 600px;
+  height: 65vh;
   max-height: 800px;
   padding: 50px;
   background-color: var(--background-color-tertiary);
@@ -84,16 +85,23 @@
   margin-bottom: 18px;
 }
 
-.image-preview {
+.file-preview {
   display: none;
   margin-bottom: 22px;
-  width: 100px;
+  width: auto;
   height: 100px;
-  object-fit: cover;
 }
 
 .movie-form-actions {
   display: flex;
   justify-content: center;
   gap: 10px;
+}
+
+.card-loading .movie-form-actions button {
+  pointer-events: none;
+}
+
+.display-block {
+  display: block;
 }

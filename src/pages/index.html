@@ -57,7 +57,8 @@
             <input
               class="form-input-text form-input-movie"
               id="title"
-              name="title,required"
+              name="title"
+              rules="required"
               type="text"
               placeholder="Title"
               value=""
@@ -73,7 +74,8 @@
             <input
               class="form-input-file form-input-movie movie-file-input"
               id="image"
-              name="image,required"
+              name="image"
+              rules="required"
               type="file"
               accept="image/*"
               placeholder="Choose file"
@@ -82,7 +84,7 @@
           </div>
 
           <!-- Image preview -->
-          <img id="movie-image-preview" class="image-preview" src="#" alt="Image Preview" />
+          <img id="movie-image-preview" class="file-preview" src="#" alt="Image Preview" />
 
           <!-- Category -->
           <div class="form-control-movie">
@@ -92,6 +94,7 @@
             <select
               id="category"
               name="category"
+              rules="required"
               class="form-input-other form-input-movie"
             ></select>
           </div>
@@ -104,7 +107,8 @@
             <input
               class="form-input-text form-input-movie"
               id="type"
-              name="type,required"
+              name="type"
+              rules="required"
               type="text"
               placeholder="Type Movie"
               value=""
@@ -121,7 +125,8 @@
               <input
                 class="form-input-text form-input-movie"
                 id="year-of-release"
-                name="year-of-release,required"
+                name="year-of-release"
+                rules="required"
                 type="number"
                 value="2023"
                 placeholder="Year"
@@ -136,9 +141,14 @@
               <label class="form-label" for="is-trending">
                 Trending <span class="form-input-required">*</span>
               </label>
-              <select id="is-trending" name="is-trending" class="form-input-other form-input-movie">
-                <option selected value="true">Yes</option>
-                <option value="false">No</option>
+              <select
+                id="is-trending"
+                name="is-trending"
+                rules="required"
+                class="form-input-other form-input-movie"
+              >
+                <option selected value="yes">Yes</option>
+                <option value="no">No</option>
               </select>
             </div>
           </div>
@@ -151,13 +161,19 @@
             <input
               class="form-input-file form-input-movie movie-file-input"
               id="video"
-              name="video,required"
+              name="video"
+              rules="required"
               type="file"
               accept="video/*"
               placeholder="Choose file"
             />
             <p class="input-error"></p>
           </div>
+
+          <!-- Video Preview-->
+          <video class="file-preview" width="400" controls="controls" preload="metadata">
+            <source id="movie-video-preview" src="../assets/videos/cat.mp4" type="video/mp4" />
+          </video>
 
           <!-- Description -->
           <div class="form-control-movie form-control-description">
@@ -167,7 +183,8 @@
             <textarea
               class="form-input-text form-input-movie movie-description-input"
               id="description"
-              name="description,required"
+              name="description"
+              rules="required"
               type="text"
               placeholder="Description"
               maxlength="2000"

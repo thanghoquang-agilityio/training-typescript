@@ -5,8 +5,7 @@ export const MESSAGES = {
     `${field} must be between from ${min} to ${max}`,
 };
 
-export const CONFIRM_MESSAGES = {
-  create: 'Do you want to create this movie?',
-  update: 'Do you want to update this movie?',
-  delete: 'Do you want to delete this movie?',
+export const ERROR_MESSAGES = {
+  create: 'Movie creation failed',
+  update: 'Movie update failed',
 };

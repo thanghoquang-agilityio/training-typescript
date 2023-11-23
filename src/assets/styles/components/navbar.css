@@ -5,7 +5,7 @@
 }
 
 .navbar .text {
-  font-weight: 500;
+  font-weight: var(--font-weight-regular);
   color: var(--text-color-primary);
 }
 
@@ -14,7 +14,7 @@
 }
 
 .navbar-categories .text:hover {
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
 }
 
 .navbar-categories .text:not(:last-child) {
@@ -31,12 +31,11 @@
 .profile-menu {
   display: flex;
   align-items: center;
-  border: 1px solid rgba(34, 31, 29, 255);
   cursor: not-allowed;
 }
 
 .profile-menu:hover .text {
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
 }
 
 .avatar-profile {

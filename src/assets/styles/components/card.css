@@ -1,6 +1,5 @@
 .card-trending {
   position: relative;
-  border: 1px solid var(--border-color-primary);
   border-radius: 20px;
 }
 
@@ -27,12 +26,12 @@
   border-radius: 0 0 20px 20px;
   width: 100%;
   min-height: 86px;
-  background: linear-gradient(100.38deg, #ffffff 12.94%, rgba(255, 255, 255, 0) 159.1%);
+  background: var(--background-linear-content-card);
 }
 
 .card-content .text {
   margin: 16px auto auto 20px;
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
   color: var(--text-color-secondary);
 }
 
@@ -43,7 +42,6 @@
 
 .card-continue-watching {
   position: relative;
-  border: 1px solid var(--border-color-primary);
   border-radius: 20px;
   width: auto;
   object-fit: cover;
@@ -51,7 +49,6 @@
 
 .card-favourites {
   position: relative;
-  border: 1px solid var(--border-color-primary);
   border-radius: 20px;
   object-fit: contain;
 }

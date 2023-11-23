@@ -8,7 +8,7 @@
 .text-sub-title {
   font-size: var(--font-size-sm);
   font-family: var(--primary-font);
-  font-weight: 400;
+  font-weight: var(--font-weight-light);
   text-align: left;
 }
 
@@ -16,7 +16,7 @@
   font-size: var(--font-size-2xl);
   line-height: 30px;
   font-family: var(--primary-font);
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
   text-align: left;
   color: var(--text-color-primary);
 }
@@ -24,8 +24,8 @@
 .text-card {
   font-size: var(--font-size-xl);
   line-height: 24px;
-  font-family: var(--primary-medium-font);
-  font-weight: 500;
+  font-family: var(--primary-font);
+  font-weight: var(--font-weight-regular);
   text-align: left;
   color: var(--text-color-primary);
 }
