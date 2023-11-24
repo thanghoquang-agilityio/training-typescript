@@ -5,6 +5,7 @@
 @import url('common/global.css');
 
 /* Components */
+@import url('components/grid-layout.css');
 @import url('components/icon.css');
 @import url('components/button.css');
 @import url('components/text.css');
@@ -17,6 +18,6 @@
 
 /* Pages */
 @import url('pages/home.css');
-@import url('pages/favourites.css');
+@import url('pages/favorites.css');
 @import url('pages/trending.css');
 @import url('pages/form-movie.css');

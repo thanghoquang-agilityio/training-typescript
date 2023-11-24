@@ -1,5 +1,5 @@
-export const enum MovieGenre {
+export const enum TypeOfFilter {
   Trending = 'trending',
-  Favourites = 'favourites',
+  Favorites = 'favorites',
   ContinueWatching = 'continue-watching',
 }

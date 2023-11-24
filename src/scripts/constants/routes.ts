@@ -1,6 +1,6 @@
 export const ROUTES = {
   homePage: '/',
-  favouritesPage: '/favourites.html',
+  favoritesPage: '/favorites.html',
   trendingPage: '/trending.html',
 };
 
@@ -11,7 +11,7 @@ export const SIDEBAR_LIST = [
     title: 'Home',
   },
   {
-    path: ROUTES.favouritesPage,
+    path: ROUTES.favoritesPage,
     iconName: 'heart-sidebar',
     title: 'Favorites',
   },

@@ -6,7 +6,6 @@
     <title>Movie Streaming</title>
     <link rel="stylesheet" href="../assets/styles/main.css" />
     <link rel="icon" href="../assets/icons/heart-full.svg" />
-    <script src="../scripts/main.ts" type="module" defer></script>
   </head>
   <body>
     <div class="container">
@@ -16,15 +15,17 @@
 
         <section class="trending-now">
           <h2 class="text-title-section">Trending at this moment</h2>
-          <div class="trending-movie-wrapper card-loading movie-list">
+          <div class="grid-card-container trending-movie-wrapper card-loading movie-list">
             <span class="loader"></span>
           </div>
         </section>
 
-        <section class="card-details"></section>
+        <section class="grid-content-container card-details"></section>
 
-        <p class="text-title-section text-empty">Empty Movie</p>
+        <span class="text-title-section text-empty">Empty Movie</span>
       </main>
     </div>
   </body>
+
+  <script src="../scripts/main.ts" type="module" defer></script>
 </html>

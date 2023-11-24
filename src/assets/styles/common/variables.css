@@ -7,6 +7,8 @@
   --text-color-secondary: #000000;
   --text-color-error: #ee5050;
   --border-color-primary: #8a8b8b;
+  --box-shadow-color-sidebar: #6100c266;
+  --background-color-container: #221f1d;
 
   /* Linear background from figma*/
   --background-linear-button: linear-gradient(
@@ -41,4 +43,10 @@
   --font-weight-regular: 500;
   --font-weight-medium: 600;
   --font-weight-bold: 700;
+
+  /* Z index */
+  --background-outside-container: -1;
+  --button-on-the-card: 1;
+  --background-form: 2;
+  --form-container: 3;
 }

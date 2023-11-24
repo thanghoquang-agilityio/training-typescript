@@ -6,7 +6,6 @@
     <title>Movie Streaming</title>
     <link rel="stylesheet" href="../assets/styles/main.css" />
     <link rel="icon" href="../assets/icons/heart-full.svg" />
-    <script src="../scripts/main.ts" type="module" defer></script>
   </head>
   <body>
     <div class="container">
@@ -30,14 +29,14 @@
           <h2 class="text-title-section">
             Trending <img class="create-movie" src="../assets/icons/add.svg" alt="add-icon" />
           </h2>
-          <div class="trending-movie-wrapper card-loading movie-list">
+          <div class="grid-card-container trending-movie-wrapper card-loading movie-list">
             <span class="loader"></span>
           </div>
         </section>
 
         <section class="continue-watching">
           <h2 class="text-title-section">Continue watching</h2>
-          <div class="continue-watching-wrapper card-loading movie-list">
+          <div class="grid-filter-container continue-watching-wrapper card-loading movie-list">
             <span class="loader"></span>
           </div>
         </section>
@@ -72,7 +71,7 @@
               Image <span class="form-input-required">*</span>
             </label>
             <input
-              class="form-input-file form-input-movie movie-file-input"
+              class="form-input-file movie-file-input"
               id="image"
               name="image"
               rules="required"
@@ -116,7 +115,7 @@
             <p class="input-error"></p>
           </div>
 
-          <div class="form-control-multiple">
+          <div class="grid-content-container">
             <!-- Year of release -->
             <div class="form-control-movie">
               <label class="form-label" for="year-of-release">
@@ -141,6 +140,7 @@
               <label class="form-label" for="is-trending">
                 Trending <span class="form-input-required">*</span>
               </label>
+              <!-- TODO: Update score instead of is trending -->
               <select
                 id="is-trending"
                 name="is-trending"
@@ -159,7 +159,7 @@
               Video <span class="form-input-required">*</span>
             </label>
             <input
-              class="form-input-file form-input-movie movie-file-input"
+              class="form-input-file movie-file-input"
               id="video"
               name="video"
               rules="required"
@@ -181,7 +181,7 @@
               Description <span class="form-input-required">*</span>
             </label>
             <textarea
-              class="form-input-text form-input-movie movie-description-input"
+              class="form-input-text movie-description-input"
               id="description"
               name="description"
               rules="required"
@@ -203,4 +203,6 @@
       </section>
     </div>
   </body>
+
+  <script src="../scripts/main.ts" type="module" defer></script>
 </html>

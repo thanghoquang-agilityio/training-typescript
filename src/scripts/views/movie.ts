@@ -1,5 +1,5 @@
 import { resetErrors, validateForm, convertSnakeToCamel, extractFormData } from '@/utils';
-import { Movie, MovieData } from '@/interfaces';
+import { Movie, FilteredMovieList } from '@/interfaces';
 import { ERROR_MESSAGES, FORM_TITLES, NAVBAR_LIST } from '@/constants';
 
 export class MovieView {
@@ -75,10 +75,12 @@ export class MovieView {
   }
 
   /**
-   * Get movie Id when click heart button to the change favourites.
+   * Get movie Id when click heart button to the change favorites.
    * @param {Function} handler - The change event handler function.
    */
-  getMovieIdByMovieButton = (handler: (id: number, movieGenre: keyof MovieData) => void) => {
+  getMovieIdByMovieButton = (
+    handler: (id: number, typeOfFilter: keyof FilteredMovieList) => void,
+  ) => {
     this.heartButtonMovieElement = document.querySelectorAll<HTMLElement>('.button-heart-card');
 
     if (this.heartButtonMovieElement.length) {
@@ -89,22 +91,22 @@ export class MovieView {
           if (targetElement) {
             const parentFigure: HTMLElement | null = targetElement.closest('figure');
             let movieId: string | null = null;
-            let movieGenre: keyof MovieData = 'trending';
+            let typeOfFilter: keyof FilteredMovieList = 'trending';
 
             if (parentFigure) {
               parentFigure.classList.add('card-loading');
               movieId = parentFigure.getAttribute('id');
 
-              // Get movie genre in class name
+              // Get type of filter of movie in class name
               const classNameMovie = parentFigure.className.split(' ')[0];
 
-              movieGenre = convertSnakeToCamel(
+              typeOfFilter = convertSnakeToCamel(
                 classNameMovie.split('-').slice(1).join('-'),
-              ) as keyof MovieData;
+              ) as keyof FilteredMovieList;
             }
 
-            if (movieId && movieGenre) {
-              handler(parseInt(movieId), movieGenre);
+            if (movieId && typeOfFilter) {
+              handler(parseInt(movieId), typeOfFilter);
             }
           }
         });
@@ -150,7 +152,7 @@ export class MovieView {
    * Remove loading card movie when clicking favorite button
    * @param {string} movieId - The id of movie.
    */
-  updateLoadingFavourites = (movieId: number) => {
+  updateLoadingFavorites = (movieId: number) => {
     this.movieDisplayedElement = document.getElementById(movieId.toString());
 
     // Re-render movie detail
@@ -237,7 +239,7 @@ export class MovieView {
   };
 
   /**
-   * Get movie Id when click heart button to the change favourites.
+   * Get movie Id when click heart button to the change favorites.
    * @param {Function} handler - The change event handler function.
    */
   getMovieIdByHeartButton = (handler: (id: number) => void) => {
@@ -365,6 +367,7 @@ export class MovieView {
    */
   displayFormMovie = (movie?: Movie) => {
     if (this.divFormMovieElement && this.categorySelectElement) {
+      this.categorySelectElement.innerHTML = '';
       this.divFormMovieElement.classList.add('display-block');
       this.addOption(this.categorySelectElement);
 
@@ -407,13 +410,18 @@ export class MovieView {
 
           this.formTitleElement.setAttribute('movie-id', movie.id.toString());
           this.formTitleElement.setAttribute('rating', movie.rating.toString());
-          this.formTitleElement.setAttribute('favourites', movie.favourites.toString());
+          this.formTitleElement.setAttribute('favorites', movie.favorites.toString());
           this.formTitleElement.setAttribute('incompleteness', movie.incompleteness.toString());
         } else {
+          this.formTitleElement.setAttribute('movie-id', '');
+          this.formTitleElement.setAttribute('rating', '');
+          this.formTitleElement.setAttribute('favorites', '');
+          this.formTitleElement.setAttribute('incompleteness', '');
+
           this.formTitleElement.textContent = FORM_TITLES.movieFormCreate;
         }
 
-        this.addKeydownFormMovie();
+        this.addKeydownCloseFormMovie();
         this.closeFormByClickOutSide();
         this.changeInputFile();
         this.closeFormMovie();
@@ -478,10 +486,6 @@ export class MovieView {
 
         if (this.divFormMovieElement) {
           this.divFormMovieElement.classList.remove('display-block');
-        }
-
-        if (this.categorySelectElement) {
-          this.categorySelectElement.innerHTML = '';
         }
 
         if (this.formMovieElement) {
@@ -579,15 +583,15 @@ export class MovieView {
                 if (this.formTitleElement) {
                   const movieId = this.formTitleElement.getAttribute('movie-id');
                   const rating = this.formTitleElement.getAttribute('rating');
-                  const favourites = this.formTitleElement.getAttribute('favourites');
+                  const favorites = this.formTitleElement.getAttribute('favorites');
                   const incompleteness = this.formTitleElement.getAttribute('incompleteness');
 
                   if (rating) {
                     movie.rating = parseInt(rating);
                   }
 
-                  if (favourites) {
-                    movie.favourites = favourites.split(',').map((item) => parseInt(item));
+                  if (favorites) {
+                    movie.favorites = favorites.split(',').map((item) => parseInt(item));
                   }
 
                   if (incompleteness) {
@@ -613,24 +617,16 @@ export class MovieView {
 
                     if (isSuccess && this.cancelButtonFormElement) {
                       this.cancelButtonFormElement.click();
-
-                      if (this.categorySelectElement) {
-                        this.categorySelectElement.innerHTML = '';
-                      }
                     } else {
-                      window.alert(ERROR_MESSAGES.create);
+                      window.alert(ERROR_MESSAGES.update);
                     }
                   } else {
                     const isSuccess = await handler(movie);
 
                     if (isSuccess && this.cancelButtonFormElement) {
                       this.cancelButtonFormElement.click();
-
-                      if (this.categorySelectElement) {
-                        this.categorySelectElement.innerHTML = '';
-                      }
                     } else {
-                      window.alert(ERROR_MESSAGES.update);
+                      window.alert(ERROR_MESSAGES.create);
                     }
                   }
                 }
@@ -666,20 +662,12 @@ export class MovieView {
   /**
    * Add key down for form movie
    */
-  private addKeydownFormMovie = () => {
+  private addKeydownCloseFormMovie = () => {
     document.addEventListener('keydown', (event) => {
       const isEscape = event.key === 'Escape' || event.keyCode === 27;
       if (isEscape) {
         if (this.cancelButtonFormElement) {
           this.cancelButtonFormElement.click();
-        }
-      }
-
-      const isEnter = event.key === 'Enter' || event.keyCode === 13;
-
-      if (isEnter) {
-        if (this.submitButtonFormElement) {
-          this.submitButtonFormElement.click();
         }
       }
     });
