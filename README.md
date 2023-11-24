@@ -65,7 +65,7 @@
 
     - User can update the movie cards which are on the top trending
 
-- Favourites Page
+- Favorites Page
 
   - Users can view any favorite movie cards
 

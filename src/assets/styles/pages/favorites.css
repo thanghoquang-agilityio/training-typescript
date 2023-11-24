@@ -1,16 +1,14 @@
-.favourites {
+.favorites {
   margin: 56px 42px 0 32px;
 }
 
-.favourites-wrapper {
+.favorites-wrapper {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   gap: 32px;
   margin-top: 24px;
   min-height: 100px;
 }
 
-.favourites-wrapper img {
+.favorites-wrapper img {
   max-height: 254px;
 }

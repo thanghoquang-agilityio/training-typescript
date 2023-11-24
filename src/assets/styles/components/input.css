@@ -2,18 +2,12 @@
   margin-bottom: 32px;
 }
 
-.form-control-multiple {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 20px;
-}
-
 .form-input-text {
   margin-top: 10px;
   border-radius: 20px;
   border: 1px solid var(--text-color-secondary);
   width: calc(100% - 32px);
-  padding: 0 16px;
+  padding: 16px;
   outline: none;
   font-size: 14px;
   font-family: var(--primary-font);
@@ -26,7 +20,7 @@
   border-radius: 20px;
   border: 1px solid var(--text-color-secondary);
   width: 100%;
-  padding: 0 16px;
+  padding: 16px;
   outline: none;
   font-size: 14px;
   font-family: var(--primary-font);

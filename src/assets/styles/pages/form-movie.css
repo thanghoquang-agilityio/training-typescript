@@ -1,6 +1,6 @@
 .form-movie {
   position: absolute;
-  z-index: 2;
+  z-index: var(--background-form);
   top: 0;
   left: 0;
   display: none;
@@ -11,7 +11,7 @@
 
 .movie-form-container {
   position: fixed;
-  z-index: 3;
+  z-index: var(--form-container);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -57,17 +57,12 @@
   width: 100%;
 }
 
-.form-input-movie {
-  height: 48px;
-}
-
 .movie-member-input {
   height: 70px;
 }
 
 .movie-description-input {
-  height: 64px;
-  padding-top: 12px;
+  height: 128px;
 }
 
 .movie-file-input {
@@ -75,10 +70,6 @@
   display: block;
   width: fit-content;
   border: none;
-}
-
-.form-control-description {
-  margin-bottom: 12px;
 }
 
 .form-control-file {

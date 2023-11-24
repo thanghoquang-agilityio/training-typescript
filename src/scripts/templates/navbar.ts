@@ -1,13 +1,13 @@
-import { NAVBAR_LIST } from '@/constants';
+import { ERROR_MESSAGES, NAVBAR_LIST } from '@/constants';
 
 /**
  * Generates the navbar HTML template.
  * @returns {string} - The generated HTML template for the navbar.
  */
 const navbarTemplate = (): string => {
-  const navbarItemsHTML = NAVBAR_LIST.map(({ title }) => `<span class="text">${title}</span>`).join(
-    '',
-  );
+  const navbarItemsHTML = NAVBAR_LIST.map(
+    (item) => `<span class="text">${item?.title}</span>`,
+  ).join('');
 
   return `
     <navbar class="navbar">
@@ -36,5 +36,9 @@ const navbarTemplate = (): string => {
 export const renderNavbar = () => {
   const navbarElement: HTMLElement | null = document.querySelector('.top-navbar');
 
-  if (navbarElement) navbarElement.innerHTML = navbarTemplate();
+  if (navbarElement) {
+    navbarElement.innerHTML = navbarTemplate();
+  } else {
+    window.alert(ERROR_MESSAGES.renderNavbar);
+  }
 };

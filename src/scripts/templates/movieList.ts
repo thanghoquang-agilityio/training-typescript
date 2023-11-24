@@ -1,34 +1,38 @@
 import { Movie } from '@/interfaces';
-import { MovieGenre } from '@/enums';
-import { USER_ID } from '@/constants';
+import { TypeOfFilter } from '@/enums';
+import { ERROR_MESSAGES, USER_ID } from '@/constants';
 
 /**
  * Generates the movie list HTML template.
  * @param {Movie[]} movieList - The data of movie list.
- * @param {MovieGenre} movieGenre - The display type movie of movie list.
+ * @param {TypeOfFilter} typeOfFilter - The display type movie of movie list.
  * @returns {string} - The generated HTML template for the movie list.
  */
-const movieListTemplate = (movieList: Movie[], movieGenre: MovieGenre): string => {
-  const movieListHTML = movieList
+const movieListTemplate = (movieList: Movie[], typeOfFilter: TypeOfFilter): string =>
+  movieList
     .map(
-      ({ id, title, image, release, type, favourites }) =>
+      (movie) =>
         `
-          <figure class="card-${movieGenre}" id="${id}">
+          <figure class="card-${typeOfFilter}" id="${movie?.id}">
             <button class="button-heart-card">
               <img
                 class="icon-button-card"
-                src=${favourites.includes(USER_ID) ? './icons/heart-full.svg' : './icons/heart.svg'}
+                src=${
+                  movie?.favorites.includes(USER_ID)
+                    ? './icons/heart-full.svg'
+                    : './icons/heart.svg'
+                }
                 alt="heart-icon"
               />
             </button>
             <div class="card-img">
-              <img src="${image}" alt="image-${title}">
+              <img src="${movie?.image}" alt="image-${movie?.title}">
               ${
-                movieGenre !== MovieGenre.ContinueWatching
+                typeOfFilter !== TypeOfFilter.ContinueWatching
                   ? `
                     <figcaption class="card-content">
-                        <p class="text">${title}</p>
-                        <p class="text-sub-title">${release} | ${type}</p>
+                        <p class="text">${movie?.title}</p>
+                        <p class="text-sub-title">${movie?.release} | ${movie?.type}</p>
                     </figcaption>
                   `
                   : ''
@@ -40,22 +44,19 @@ const movieListTemplate = (movieList: Movie[], movieGenre: MovieGenre): string =
     )
     .join('');
 
-  return movieListHTML;
-};
-
-export const renderMovieList = (movieList: Movie[], movieGenre: MovieGenre) => {
+export const renderMovieList = (movieList: Movie[], typeOfFilter: TypeOfFilter) => {
   let movieListElement: HTMLElement | null = null;
 
-  switch (movieGenre) {
-    case MovieGenre.Trending:
+  switch (typeOfFilter) {
+    case TypeOfFilter.Trending:
       movieListElement = document.querySelector('.trending-movie-wrapper');
       break;
 
-    case MovieGenre.Favourites:
-      movieListElement = document.querySelector('.favourites-wrapper');
+    case TypeOfFilter.Favorites:
+      movieListElement = document.querySelector('.favorites-wrapper');
       break;
 
-    case MovieGenre.ContinueWatching:
+    case TypeOfFilter.ContinueWatching:
     default: {
       movieListElement = document.querySelector('.continue-watching-wrapper');
       break;
@@ -69,10 +70,12 @@ export const renderMovieList = (movieList: Movie[], movieGenre: MovieGenre) => {
     if (parentSectionElement) {
       if (movieList.length) {
         parentSectionElement.style.display = '';
-        movieListElement.innerHTML = movieListTemplate(movieList, movieGenre);
+        movieListElement.innerHTML = movieListTemplate(movieList, typeOfFilter);
       } else {
         parentSectionElement.style.display = 'none';
       }
+    } else {
+      window.alert(ERROR_MESSAGES.renderMovieList);
     }
 
     if (textEmptyElement) {

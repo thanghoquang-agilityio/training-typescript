@@ -12,12 +12,12 @@ export interface Movie {
   duration: string;
   description: string;
   isTrending: boolean;
-  favourites: number[];
+  favorites: number[];
   incompleteness: number[];
 }
 
-export interface MovieData {
+export interface FilteredMovieList {
   trending: Movie[];
-  favourites: Movie[];
+  favorites: Movie[];
   continueWatching: Movie[];
 }

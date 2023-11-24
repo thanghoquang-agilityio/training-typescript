@@ -3,7 +3,7 @@ import { Movie } from '@/interfaces';
 import { Category } from '@/types';
 import {
   DEFAULT_USER_ID,
-  DEFAULT_FAVOURITES,
+  DEFAULT_FAVORITES,
   DEFAULT_INCOMPLETENESS,
   DEFAULT_RATING,
 } from '@/constants';
@@ -68,6 +68,7 @@ export const extractFormData = async (formData: FormData): Promise<Movie> => {
     yearOfReleaseNumber = parseInt(yearOfReleaseString);
   }
 
+  // TODO: Update score instead of is trending
   const isTrendingString = formData.get('is-trending') as string;
   let isTrending = true;
 
@@ -87,7 +88,7 @@ export const extractFormData = async (formData: FormData): Promise<Movie> => {
     duration: duration,
     isTrending: isTrending,
     description: extractValue(formData, 'description'),
-    favourites: DEFAULT_FAVOURITES,
+    favorites: DEFAULT_FAVORITES,
     incompleteness: DEFAULT_INCOMPLETENESS,
   };
 };

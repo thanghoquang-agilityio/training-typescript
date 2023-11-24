@@ -1,4 +1,4 @@
-import { SIDEBAR_LIST } from '@/constants';
+import { ERROR_MESSAGES, SIDEBAR_LIST } from '@/constants';
 
 /**
  * Generates the sidebar HTML template based on current path.
@@ -7,11 +7,11 @@ import { SIDEBAR_LIST } from '@/constants';
  */
 const sidebarTemplate = (currentPath: string): string => {
   const sidebarItemsHTML = SIDEBAR_LIST.map(
-    ({ path, iconName, title }) =>
+    (item) =>
       `
       <li>
-        <a href="${path}" class="text ${path === currentPath ? 'sidebar-active' : ''}">
-          <img class="icon-sidebar-action" src="./icons/${iconName}.svg" alt="${iconName}-icon" />${title}
+        <a href="${item?.path}" class="text ${item?.path === currentPath ? 'sidebar-active' : ''}">
+          <img class="icon-sidebar-action" src="./icons/${item?.iconName}.svg" alt="${item?.iconName}-icon" />${item?.title}
         </a>
       </li>
     `,
@@ -63,5 +63,9 @@ const sidebarTemplate = (currentPath: string): string => {
 export const renderSidebar = (currentPath: string) => {
   const sidebarElement: HTMLElement | null = document.querySelector('.sidebar');
 
-  if (sidebarElement) sidebarElement.innerHTML = sidebarTemplate(currentPath);
+  if (sidebarElement) {
+    sidebarElement.innerHTML = sidebarTemplate(currentPath);
+  } else {
+    window.alert(ERROR_MESSAGES.renderSidebar);
+  }
 };
