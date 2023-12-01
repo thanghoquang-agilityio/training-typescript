@@ -1,12 +1,7 @@
-import { convertFile, getVideoDuration } from './file';
-import { Movie } from '@/interfaces';
+import fileHelper from './file';
+
 import { Category } from '@/types';
-import {
-  DEFAULT_USER_ID,
-  DEFAULT_FAVORITES,
-  DEFAULT_INCOMPLETENESS,
-  DEFAULT_RATING,
-} from '@/constants';
+import { IMovieOptionalField } from '@/interfaces';
 
 /**
  * Extract value from input.
@@ -38,7 +33,7 @@ const getOptionalFile = async (
 ): Promise<string> => {
   const file = formData.get(key) as File;
 
-  return file.size > 0 ? await convertFile(file) : defaultValue;
+  return file.size > 0 ? await fileHelper.convertFile(file) : defaultValue;
 };
 
 /**
@@ -46,21 +41,7 @@ const getOptionalFile = async (
  * @param {FormData} formData - The FormData object containing the form input values.
  * @returns {ProjectFormInputs} The structured form data.
  */
-export const extractFormData = async (formData: FormData): Promise<Movie> => {
-  const imgBase64 = await getOptionalFile(formData, 'image');
-  const videoBase64 = await getOptionalFile(formData, 'video');
-
-  let duration = '';
-  const inputVideoElement = document.getElementById('video');
-
-  if (inputVideoElement) {
-    const video = await getVideoDuration(inputVideoElement as HTMLInputElement);
-
-    if (video.length && video[0].duration) {
-      duration = video[0].duration;
-    }
-  }
-
+const extractFormData = async (formData: FormData): Promise<IMovieOptionalField> => {
   const yearOfReleaseString = formData.get('year-of-release') as string;
   let yearOfReleaseNumber = new Date().getFullYear();
 
@@ -76,19 +57,40 @@ export const extractFormData = async (formData: FormData): Promise<Movie> => {
     isTrending = isTrendingString === 'yes';
   }
 
-  return {
-    id: DEFAULT_USER_ID,
+  const movie: IMovieOptionalField = {
     title: extractValue(formData, 'title'),
-    image: imgBase64,
     category: formData.get('category') as Category,
     type: extractValue(formData, 'type'),
     release: yearOfReleaseNumber,
-    rating: DEFAULT_RATING,
-    video: videoBase64,
-    duration: duration,
     isTrending: isTrending,
     description: extractValue(formData, 'description'),
-    favorites: DEFAULT_FAVORITES,
-    incompleteness: DEFAULT_INCOMPLETENESS,
   };
+
+  const imgBase64 = await getOptionalFile(formData, 'image');
+
+  if (imgBase64) {
+    movie.image = imgBase64;
+  }
+
+  const videoBase64 = await getOptionalFile(formData, 'video');
+
+  if (videoBase64) {
+    movie.video = videoBase64;
+
+    const inputVideoElement = document.getElementById('video');
+
+    if (inputVideoElement) {
+      const video = await fileHelper.getVideoDuration(inputVideoElement as HTMLInputElement);
+
+      if (video.length && video[0].duration) {
+        const duration = video[0].duration;
+
+        if (duration) movie.duration = duration;
+      }
+    }
+  }
+
+  return movie;
 };
+
+export default extractFormData;

@@ -35,3 +35,12 @@
   margin-top: 65px;
   text-align: center;
 }
+
+.text-button {
+  font-size: var(--font-size-md);
+  line-height: 20px;
+  font-family: var(--primary-font);
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  color: var(--text-color-primary);
+}

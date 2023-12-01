@@ -1,6 +1,6 @@
 import { Category } from '@/types';
 
-export interface Movie {
+interface IMovie {
   id: number;
   title: string;
   image: string;
@@ -9,15 +9,13 @@ export interface Movie {
   release: number;
   rating: number;
   video: string;
-  duration: string;
+  duration: number;
   description: string;
   isTrending: boolean;
   favorites: number[];
   incompleteness: number[];
 }
 
-export interface FilteredMovieList {
-  trending: Movie[];
-  favorites: Movie[];
-  continueWatching: Movie[];
-}
+interface IMovieOptionalField extends Partial<IMovie> {}
+
+export type { IMovie, IMovieOptionalField };

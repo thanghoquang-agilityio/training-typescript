@@ -9,9 +9,9 @@
   width: calc(100% - 32px);
   padding: 16px;
   outline: none;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-family: var(--primary-font);
-  font-weight: 400;
+  font-weight: var(--font-weight-light);
   color: var(--text-color-secondary);
 }
 
@@ -22,18 +22,18 @@
   width: 100%;
   padding: 16px;
   outline: none;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-family: var(--primary-font);
-  font-weight: 400;
+  font-weight: var(--font-weight-light);
   color: var(--text-color-secondary);
 }
 
 .form-input-file {
   width: 100%;
   padding: 0 16px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-family: var(--primary-font);
-  font-weight: 400;
+  font-weight: var(--font-weight-light);
   color: var(--text-color-primary);
 }
 
@@ -46,9 +46,9 @@
 }
 
 .form-label {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-family: var(--primary-font);
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
   color: var(--text-color-primary);
 }
 

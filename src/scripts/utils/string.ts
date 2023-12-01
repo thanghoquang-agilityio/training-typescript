@@ -1,4 +1,4 @@
-export const convertSnakeToCamel = (text: string): string => {
+const convertSnakeToCamel = (text: string): string => {
   if (typeof text !== 'string' || !text.trim()) {
     return '';
   }
@@ -8,7 +8,7 @@ export const convertSnakeToCamel = (text: string): string => {
     .replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''));
 };
 
-export const convertSnakeToCapitalize = (text: string): string => {
+const convertSnakeToCapitalize = (text: string): string => {
   if (typeof text !== 'string' || !text.trim()) {
     return '';
   }
@@ -19,7 +19,7 @@ export const convertSnakeToCapitalize = (text: string): string => {
   return newText.charAt(0).toUpperCase() + newText.slice(1);
 };
 
-export const formatDuration = (seconds: number): string => {
+const formatDuration = (seconds: number): string => {
   const oneMinute = 60;
   const oneHour = 60 * oneMinute;
 
@@ -40,3 +40,11 @@ export const formatDuration = (seconds: number): string => {
     return `${formattedSeconds}`;
   }
 };
+
+const stringHelper = {
+  convertSnakeToCamel: convertSnakeToCamel,
+  convertSnakeToCapitalize: convertSnakeToCapitalize,
+  formatDuration: formatDuration,
+};
+
+export default stringHelper;

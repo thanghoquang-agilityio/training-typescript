@@ -1,2 +1,4 @@
-export * from './movie';
-export * from './file';
+import { IMovie, IMovieOptionalField } from './movie';
+import IVideoFile from './file';
+
+export type { IMovie, IMovieOptionalField, IVideoFile };
