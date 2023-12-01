@@ -68,7 +68,7 @@ class Movie {
           value: DEFAULT_LOGGED_USER_ID,
           like: true,
         });
-
+   
         break;
       }
 
