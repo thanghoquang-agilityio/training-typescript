@@ -1,3 +1,5 @@
-export interface CustomFile extends File {
-  duration?: string; // Adding duration property to File interface
+interface IVideoFile extends File {
+  duration?: number; // Adding duration property to File interface
 }
+
+export default IVideoFile;

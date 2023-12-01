@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 
-import { MovieController } from '@/controllers';
-import { MovieModel } from '@/models';
-import { MovieView } from '@/views';
+import MovieController from '@/controllers/movie';
+import MovieModel from '@/models/movie';
+import MovieView from '@/views/movie';
 
 dotenv.config();
 

@@ -1,16 +1,24 @@
-import { MovieModel } from '@/models';
-import { MovieView } from '@/views';
-import { renderSidebar, renderNavbar, renderMovieList, renderMovieDetail } from '@/templates';
-import { Movie, FilteredMovieList } from '@/interfaces';
-import { TypeOfFilter, HttpStatusCodes } from '@/enums';
-import { Category } from '@/types';
-import { ROUTES, USER_ID, MOVIE_FIELD_PAYLOAD, TOP_TRENDING_LIMIT } from '@/constants';
+import {
+  ROUTES,
+  DEFAULT_LOGGED_USER_ID,
+  MOVIE_FIELD_PAYLOAD,
+  TOP_TRENDING_LIMIT,
+} from '@/constants';
+import { TypeOfFilter } from '@/enums';
 
-export class MovieController {
+import { Category, FilteredMovieList, PathnameValid } from '@/types';
+import { IMovie, IMovieOptionalField } from '@/interfaces';
+
+import { renderSidebar, renderNavbar, renderMovieList, renderMovieDetail } from '@/renders';
+
+import MovieModel from '@/models/movie';
+import MovieView from '@/views/movie';
+
+class Movie {
   model: MovieModel;
   view: MovieView;
   movieList: FilteredMovieList;
-  pathname: string;
+  pathname: PathnameValid;
 
   constructor(model: MovieModel, view: MovieView) {
     this.model = model;
@@ -21,7 +29,7 @@ export class MovieController {
       continueWatching: [],
     };
 
-    this.pathname = window.location.pathname;
+    this.pathname = window.location.pathname as PathnameValid;
     this.initData(this.pathname);
 
     renderSidebar(this.pathname);
@@ -35,59 +43,42 @@ export class MovieController {
    * Handles create data of the page is displayed
    * @param {string} path - The page is displayed.
    */
-  private initData = async (path: string) => {
-    let response;
-
+  private initData = async (path: PathnameValid) => {
     switch (path) {
-      case ROUTES.homePage:
-        response = await this.model.getMoviesByField({
+      case ROUTES.homePage: {
+        this.movieList.continueWatching = await this.model.getListByField({
           field: MOVIE_FIELD_PAYLOAD.incompleteness,
-          value: USER_ID,
+          value: DEFAULT_LOGGED_USER_ID,
           like: true,
         });
 
-        if (response.status === HttpStatusCodes.OK && response.data) {
-          this.movieList.continueWatching = response.data;
-        }
-
-        response = await this.model.getMoviesByField({
+        this.movieList.trending = await this.model.getListByField({
           field: MOVIE_FIELD_PAYLOAD.isTrending,
           value: true,
           like: false,
           limit: TOP_TRENDING_LIMIT,
         });
 
-        if (response.status === HttpStatusCodes.OK && response.data) {
-          this.movieList.trending = response.data;
-        }
-
         break;
+      }
 
-      case ROUTES.favoritesPage:
-        response = await this.model.getMoviesByField({
+      case ROUTES.favoritesPage: {
+        this.movieList.favorites = await this.model.getListByField({
           field: MOVIE_FIELD_PAYLOAD.favorites,
-          value: USER_ID,
+          value: DEFAULT_LOGGED_USER_ID,
           like: true,
         });
 
-        if (response.status === HttpStatusCodes.OK && response.data) {
-          this.movieList.favorites = response.data;
-        }
-
         break;
+      }
 
-      case ROUTES.trendingPage:
-      default: {
-        response = await this.model.getMoviesByField({
+      case ROUTES.trendingPage: {
+        this.movieList.trending = await this.model.getListByField({
           field: MOVIE_FIELD_PAYLOAD.isTrending,
           value: true,
           like: false,
           limit: TOP_TRENDING_LIMIT,
         });
-
-        if (response.status === HttpStatusCodes.OK && response.data) {
-          this.movieList.trending = response.data;
-        }
 
         break;
       }
@@ -100,29 +91,33 @@ export class MovieController {
    * Handles render data of the page is displayed
    * @param {string} path - The page is displayed.
    */
-  private displayMovieList = async (path: string) => {
+  private displayMovieList = async (path: PathnameValid) => {
     switch (path) {
-      case ROUTES.homePage:
+      case ROUTES.homePage: {
         renderMovieList(this.movieList.trending, TypeOfFilter.Trending);
         renderMovieList(this.movieList.continueWatching, TypeOfFilter.ContinueWatching);
 
         this.view.getMovieIdByMovieButton(this.updateFavorites);
         this.view.displayCreateMovieForm();
         this.view.displayUpdateMovieForm(this.displayMovieUpdate);
-        break;
 
-      case ROUTES.favoritesPage:
+        break;
+      }
+
+      case ROUTES.favoritesPage: {
         renderMovieList(this.movieList.favorites, TypeOfFilter.Favorites);
 
         this.view.getMovieIdByMovieButton(this.removeMovieInFavorites);
-        break;
 
-      case ROUTES.trendingPage:
-      default: {
+        break;
+      }
+
+      case ROUTES.trendingPage: {
         renderMovieList(this.movieList.trending, TypeOfFilter.Trending);
 
         this.view.getMovieIdByMovieButton(this.updateFavoritesTrending);
         this.view.getMovieIdByMovieCard(this.displayMovieDetail);
+
         break;
       }
     }
@@ -135,44 +130,49 @@ export class MovieController {
    * @param {number} movieId - The ID of the movie to be updated in favorites page.
    * @param {FilteredMovieList} typeOfFilter - The type of the movie.
    */
-  private updateFavorites = async (movieId: number, typeOfFilter: keyof FilteredMovieList) => {
-    const movie: Movie | undefined = this.movieList[typeOfFilter].find(
-      (movie: Movie) => movie.id === movieId,
-    );
-    let favorites: number[] = [];
+  private updateFavorites = async (
+    movieId: number,
+    typeOfFilter: keyof FilteredMovieList,
+  ): Promise<boolean> => {
+    const movie = this.movieList[typeOfFilter].find((movie: IMovie) => movie.id === movieId);
 
-    if (movie) {
-      favorites = movie.favorites;
+    if (!movie) {
+      return false;
     }
 
-    // Check like or dislike movie
-    if (favorites.includes(USER_ID)) {
-      favorites = favorites.filter((item) => USER_ID !== item);
+    let favorites: number[] = movie.favorites;
+
+    // Update data in favourites
+    if (favorites.includes(DEFAULT_LOGGED_USER_ID)) {
+      favorites = favorites.filter((item) => DEFAULT_LOGGED_USER_ID !== item);
     } else {
       if (!favorites.length) {
-        favorites = [USER_ID];
+        favorites = [DEFAULT_LOGGED_USER_ID];
       } else {
-        favorites.push(USER_ID);
+        favorites.push(DEFAULT_LOGGED_USER_ID);
       }
     }
 
-    if (movie) {
-      movie.favorites = favorites;
+    movie.favorites = favorites;
 
-      // Call API update favorites
-      const response = await this.model.updateMovie(movieId, movie);
+    // Call API update favorites
+    const updatedMovie = await this.model.update(movieId, movie);
 
-      // Check update success or failed for update movie data
-      if (response.status === HttpStatusCodes.OK && typeOfFilter !== TypeOfFilter.Favorites) {
-        this.movieList[typeOfFilter].forEach((movie: Movie) => {
-          if (movie.id === movieId) {
-            movie.favorites = favorites;
-          }
-        });
-
-        this.displayMovieList(this.pathname);
-      }
+    if (!updatedMovie?.id) {
+      return false;
     }
+
+    if (typeOfFilter !== TypeOfFilter.Favorites) {
+      this.movieList[typeOfFilter].forEach((movie: IMovie) => {
+        if (movie.id === movieId) {
+          movie.favorites = favorites;
+        }
+      });
+
+      this.displayMovieList(this.pathname);
+    }
+
+    return true;
   };
 
   /**
@@ -184,11 +184,13 @@ export class MovieController {
     movieId: number,
     typeOfFilter: keyof FilteredMovieList,
   ) => {
-    await this.updateFavorites(movieId, typeOfFilter);
+    const isSuccess = await this.updateFavorites(movieId, typeOfFilter);
 
-    this.movieList.favorites = this.movieList.favorites.filter((movie) => movie.id !== movieId);
+    if (isSuccess) {
+      this.movieList.favorites = this.movieList.favorites.filter((movie) => movie.id !== movieId);
 
-    this.displayMovieList(this.pathname);
+      this.displayMovieList(this.pathname);
+    }
   };
 
   /**
@@ -197,10 +199,10 @@ export class MovieController {
    */
   private displayMovieDetail = async (movieId: number) => {
     // Call API get movie by id
-    const response = await this.model.getMovieById(movieId);
+    const movie = await this.model.getById(movieId);
 
-    if (response.status === HttpStatusCodes.OK && response.data) {
-      this.renderDetail(response.data);
+    if (movie?.id) {
+      this.renderDetail(movie);
     }
   };
 
@@ -208,7 +210,7 @@ export class MovieController {
    * Handles render data of the movie is displayed
    * @param {Movie} movie - The movie is displayed.
    */
-  private renderDetail = (movie: Movie) => {
+  private renderDetail = (movie: IMovie) => {
     renderMovieDetail(movie);
 
     this.view.getMovieIdByHeartButton(this.updateFavoriteDetail);
@@ -225,10 +227,14 @@ export class MovieController {
     const hasDetail: boolean = this.view.getImageDetailElement();
 
     if (hasDetail) {
-      const movie = this.movieList.trending.find((movie: Movie) => movie.id === movieId);
+      const movie = this.movieList.trending.find((movie: IMovie) => movie.id === movieId);
 
       this.view.addLoadingMovieButton();
-      await this.updateFavorites(movieId, typeOfFilter);
+      const isSuccess = await this.updateFavorites(movieId, typeOfFilter);
+
+      if (!isSuccess) {
+        return;
+      }
 
       if (movie) {
         this.renderDetail(movie);
@@ -246,13 +252,15 @@ export class MovieController {
    */
   private updateFavoriteDetail = async (movieId: number) => {
     const typeOfFilter: keyof FilteredMovieList = TypeOfFilter.Trending;
-    const movie: Movie | undefined = this.movieList[typeOfFilter].find(
-      (movie: Movie) => movie.id === movieId,
-    );
+    const movie = this.movieList[typeOfFilter].find((movie: IMovie) => movie.id === movieId);
 
     this.view.addLoadingHeartButton();
 
-    await this.updateFavorites(movieId, typeOfFilter);
+    const isSuccess = await this.updateFavorites(movieId, typeOfFilter);
+
+    if (!isSuccess) {
+      return;
+    }
 
     if (movie) {
       this.renderDetail(movie);
@@ -266,59 +274,51 @@ export class MovieController {
    * @param {string} filterValue - category was clicked.
    * For example, the movie filter has a category of Series,...
    */
-  private filterMovieList = async (filterValue: string) => {
-    let response;
-
-    const category: Category = filterValue as Category;
-
+  private filterMovieList = async (filterValue: Category) => {
     switch (this.pathname) {
-      case ROUTES.homePage:
-        response = await this.model.filterMovies({ category: category, incompleteness: USER_ID });
+      case ROUTES.homePage: {
+        const movieContinueWatching = await this.model.filter({
+          category: filterValue,
+          incompleteness: DEFAULT_LOGGED_USER_ID,
+        });
 
-        if (response.status === HttpStatusCodes.OK && response.data) {
-          this.movieList.continueWatching = response.data;
-        }
+        this.movieList.continueWatching = movieContinueWatching || [];
 
-        if (filterValue) {
-          response = await this.model.getMoviesByField({
-            field: MOVIE_FIELD_PAYLOAD.category,
-            value: filterValue,
-            like: false,
-            limit: TOP_TRENDING_LIMIT,
-          });
+        const movieTrending = await this.model.getListByField({
+          field: MOVIE_FIELD_PAYLOAD.category,
+          value: filterValue,
+          like: false,
+          limit: TOP_TRENDING_LIMIT,
+        });
 
-          if (response.status === HttpStatusCodes.OK && response.data) {
-            this.movieList.trending = response.data;
-          }
-        }
+        this.movieList.trending = movieTrending || [];
 
         break;
+      }
 
-      case ROUTES.favoritesPage:
-        response = await this.model.filterMovies({ category: category, favorites: USER_ID });
+      case ROUTES.favoritesPage: {
+        const movieFavorites = await this.model.filter({
+          category: filterValue,
+          favorites: DEFAULT_LOGGED_USER_ID,
+        });
 
-        if (response.status === HttpStatusCodes.OK && response.data) {
-          this.movieList.favorites = response.data;
-        }
-
-        break;
-
-      case ROUTES.trendingPage:
-      default:
-        if (filterValue) {
-          response = await this.model.getMoviesByField({
-            field: MOVIE_FIELD_PAYLOAD.category,
-            value: filterValue,
-            like: false,
-            limit: TOP_TRENDING_LIMIT,
-          });
-
-          if (response.status === HttpStatusCodes.OK && response.data) {
-            this.movieList.trending = response.data;
-          }
-        }
+        this.movieList.favorites = movieFavorites || [];
 
         break;
+      }
+
+      case ROUTES.trendingPage: {
+        const movieTrending = await this.model.getListByField({
+          field: MOVIE_FIELD_PAYLOAD.category,
+          value: filterValue,
+          like: false,
+          limit: TOP_TRENDING_LIMIT,
+        });
+
+        this.movieList.trending = movieTrending || [];
+
+        break;
+      }
     }
 
     this.displayMovieList(this.pathname);
@@ -330,7 +330,7 @@ export class MovieController {
    */
   private displayMovieUpdate = async (movieId: number) => {
     // Call API get movie by id
-    const movieIndex = this.movieList.trending.findIndex((movie: Movie) => movie.id === movieId);
+    const movieIndex = this.movieList.trending.findIndex((movie: IMovie) => movie.id === movieId);
     const movie = this.movieList.trending[movieIndex];
 
     this.view.displayFormMovie(movie);
@@ -339,44 +339,47 @@ export class MovieController {
   /**
    * Handles submit form movie
    * @param {Movie} movie - data from form.
-   * @returns {Promise<boolean | undefined>}  A promise resolving to the boolean.
    */
-  submitMovieForm = async (movie: Movie): Promise<boolean | undefined> => {
+  submitMovieForm = async (movie: IMovieOptionalField) => {
     if (movie.id) {
-      const response = await this.model.updateMovie(movie.id, movie);
+      const updatedMovie = await this.model.update(movie.id, movie);
 
-      if (response.status === HttpStatusCodes.OK && response.data) {
-        if (response.data.isTrending) {
-          const movieIndex = this.movieList.trending.findIndex(
-            (movie: Movie) => response.data && movie.id === response.data.id,
-          );
-
-          this.movieList.trending[movieIndex] = response.data;
-        } else {
-          this.movieList.trending = this.movieList.trending.filter(
-            (item) => response.data && item.id !== response.data.id,
-          );
-        }
-
-        this.displayMovieList(this.pathname);
-
-        return true;
+      if (!updatedMovie?.id) {
+        return;
       }
+
+      if (updatedMovie.isTrending) {
+        const movieIndex = this.movieList.trending.findIndex(
+          (movie: IMovie) => movie.id === updatedMovie?.id,
+        );
+
+        this.movieList.trending[movieIndex] = updatedMovie;
+      } else {
+        this.movieList.trending = this.movieList.trending.filter(
+          (item) => item.id !== updatedMovie?.id,
+        );
+      }
+
+      this.displayMovieList(this.pathname);
     } else {
-      const response = await this.model.createMovie(movie);
+      const createdMovie = await this.model.create(movie);
 
-      if (response.status === HttpStatusCodes.Created && response.data) {
-        if (response.data.isTrending) {
-          if (this.movieList.trending.length > TOP_TRENDING_LIMIT) {
-            this.movieList.trending.pop();
-          }
+      if (!createdMovie?.id) {
+        return;
+      }
 
-          this.movieList.trending.push(response.data);
-          this.displayMovieList(this.pathname);
+      if (createdMovie.isTrending) {
+        if (this.movieList.trending.length > TOP_TRENDING_LIMIT) {
+          this.movieList.trending.pop();
         }
 
-        return true;
+        this.movieList.trending.push(createdMovie);
+        this.displayMovieList(this.pathname);
       }
     }
+
+    this.view.closeForm();
   };
 }
+
+export default Movie;

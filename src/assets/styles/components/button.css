@@ -6,10 +6,6 @@
   background: var(--background-linear-button);
 }
 
-.button-heart-movie:hover {
-  border: 1px solid var(--background-color-primary);
-}
-
 .button-heart-card {
   position: absolute;
   z-index: var(--button-on-the-card);
@@ -23,11 +19,13 @@
   background: var(--background-linear-button);
 }
 
+.button-heart-movie:hover,
 .button-heart-card:hover {
   border: 1px solid var(--background-color-primary);
 }
 
-.button-watch-movie {
+.button-watch-movie,
+.button-submit {
   display: inline-flex;
   align-items: flex-start;
   margin-right: 16px;
@@ -35,17 +33,10 @@
   border-radius: 14px;
   padding: 16px 23px;
   background: var(--background-color-primary);
-
-  /* text in button */
-  font-size: var(--font-size-md);
-  line-height: 20px;
-  font-family: var(--primary-font);
-  font-weight: var(--font-weight-regular);
-  font-style: normal;
-  color: var(--text-color-primary);
 }
 
-.button-watch-movie:hover {
+.button-watch-movie:hover,
+.button-submit:hover {
   font-weight: var(--font-weight-bold);
   border: 1px solid var(--text-color-primary);
 }
@@ -58,14 +49,6 @@
   border-radius: 14px;
   padding: 16px 23px;
   background: var(--background-linear-cancel);
-
-  /* text in button */
-  font-size: var(--font-size-md);
-  line-height: 20px;
-  font-family: var(--primary-medium-font);
-  font-weight: var(--font-weight-regular);
-  font-style: normal;
-  color: var(--text-color-primary);
 }
 
 .button-cancel:hover {

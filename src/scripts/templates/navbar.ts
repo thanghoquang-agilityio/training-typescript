@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES, NAVBAR_LIST } from '@/constants';
+import { NAVBAR_LIST } from '@/constants';
 
 /**
  * Generates the navbar HTML template.
@@ -33,12 +33,4 @@ const navbarTemplate = (): string => {
     </navbar>`;
 };
 
-export const renderNavbar = () => {
-  const navbarElement: HTMLElement | null = document.querySelector('.top-navbar');
-
-  if (navbarElement) {
-    navbarElement.innerHTML = navbarTemplate();
-  } else {
-    window.alert(ERROR_MESSAGES.renderNavbar);
-  }
-};
+export default navbarTemplate;

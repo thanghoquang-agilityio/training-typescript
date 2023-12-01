@@ -1,6 +1,7 @@
-import { Movie } from '@/interfaces';
+import { DEFAULT_LOGGED_USER_ID } from '@/constants';
 import { TypeOfFilter } from '@/enums';
-import { ERROR_MESSAGES, USER_ID } from '@/constants';
+
+import { IMovie } from '@/interfaces';
 
 /**
  * Generates the movie list HTML template.
@@ -8,7 +9,7 @@ import { ERROR_MESSAGES, USER_ID } from '@/constants';
  * @param {TypeOfFilter} typeOfFilter - The display type movie of movie list.
  * @returns {string} - The generated HTML template for the movie list.
  */
-const movieListTemplate = (movieList: Movie[], typeOfFilter: TypeOfFilter): string =>
+const movieListTemplate = (movieList: IMovie[], typeOfFilter: TypeOfFilter): string =>
   movieList
     .map(
       (movie) =>
@@ -18,7 +19,7 @@ const movieListTemplate = (movieList: Movie[], typeOfFilter: TypeOfFilter): stri
               <img
                 class="icon-button-card"
                 src=${
-                  movie?.favorites.includes(USER_ID)
+                  movie?.favorites.includes(DEFAULT_LOGGED_USER_ID)
                     ? './icons/heart-full.svg'
                     : './icons/heart.svg'
                 }
@@ -44,46 +45,4 @@ const movieListTemplate = (movieList: Movie[], typeOfFilter: TypeOfFilter): stri
     )
     .join('');
 
-export const renderMovieList = (movieList: Movie[], typeOfFilter: TypeOfFilter) => {
-  let movieListElement: HTMLElement | null = null;
-
-  switch (typeOfFilter) {
-    case TypeOfFilter.Trending:
-      movieListElement = document.querySelector('.trending-movie-wrapper');
-      break;
-
-    case TypeOfFilter.Favorites:
-      movieListElement = document.querySelector('.favorites-wrapper');
-      break;
-
-    case TypeOfFilter.ContinueWatching:
-    default: {
-      movieListElement = document.querySelector('.continue-watching-wrapper');
-      break;
-    }
-  }
-
-  if (movieListElement) {
-    const parentSectionElement = movieListElement?.closest('section');
-    const textEmptyElement: HTMLElement | null = document.querySelector('.text-empty');
-
-    if (parentSectionElement) {
-      if (movieList.length) {
-        parentSectionElement.style.display = '';
-        movieListElement.innerHTML = movieListTemplate(movieList, typeOfFilter);
-      } else {
-        parentSectionElement.style.display = 'none';
-      }
-    } else {
-      window.alert(ERROR_MESSAGES.renderMovieList);
-    }
-
-    if (textEmptyElement) {
-      if (movieList.length) {
-        textEmptyElement.style.display = 'none';
-      } else {
-        textEmptyElement.style.display = 'block';
-      }
-    }
-  }
-};
+export default movieListTemplate;

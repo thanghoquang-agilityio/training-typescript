@@ -1,10 +1,10 @@
-export const ROUTES = {
+const ROUTES = {
   homePage: '/',
   favoritesPage: '/favorites.html',
   trendingPage: '/trending.html',
 };
 
-export const SIDEBAR_LIST = [
+const SIDEBAR_LIST = [
   {
     path: ROUTES.homePage,
     iconName: 'film',
@@ -27,8 +27,10 @@ export const SIDEBAR_LIST = [
   },
 ];
 
-export const NAVBAR_LIST = [
+const NAVBAR_LIST = [
   { category: 'movies', title: 'Movies' },
   { category: 'series', title: 'Series' },
   { category: 'documentaries', title: 'Documentaries' },
 ];
+
+export { ROUTES, SIDEBAR_LIST, NAVBAR_LIST };

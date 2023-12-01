@@ -1,11 +1,12 @@
-import { ERROR_MESSAGES, SIDEBAR_LIST } from '@/constants';
+import { SIDEBAR_LIST } from '@/constants';
+import { PathnameValid } from '@/types';
 
 /**
  * Generates the sidebar HTML template based on current path.
  * @param {string} currentPath - The current path of the application.
  * @returns {string} - The generated HTML template for the sidebar.
  */
-const sidebarTemplate = (currentPath: string): string => {
+const sidebarTemplate = (currentPath: PathnameValid): string => {
   const sidebarItemsHTML = SIDEBAR_LIST.map(
     (item) =>
       `
@@ -60,12 +61,4 @@ const sidebarTemplate = (currentPath: string): string => {
     </div>`;
 };
 
-export const renderSidebar = (currentPath: string) => {
-  const sidebarElement: HTMLElement | null = document.querySelector('.sidebar');
-
-  if (sidebarElement) {
-    sidebarElement.innerHTML = sidebarTemplate(currentPath);
-  } else {
-    window.alert(ERROR_MESSAGES.renderSidebar);
-  }
-};
+export default sidebarTemplate;

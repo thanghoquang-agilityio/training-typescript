@@ -1,84 +1,78 @@
-import axios from '@/services/axios';
-import { AxiosResponse, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
-import { Movie } from '@/interfaces';
+import { showAlertMessage, validateMovieResponse } from '@/utils';
+
+import { API_RESOURCE } from '@/constants';
+
 import { Category } from '@/types';
-import { API_ENDPOINT, ERROR_MESSAGES } from '@/constants';
+import { IMovie, IMovieOptionalField } from '@/interfaces';
 
-export class MovieModel {
+import axiosInstance from '@/services/axiosInstance';
+
+class Movie {
   /**
    * Fetches movie details by movie ID from the API.
    * @param {number} id - The ID of the movie to fetch.
-   * @returns {Promise<Movie>} A promise resolving to the movie details response.
+   * @returns {Promise<IMovie>} A promise resolving to the movie details response.
    */
-  getMovieById = async (
-    id: number,
-  ): Promise<{ status: number | undefined; data: Movie | undefined }> => {
-    try {
-      const response: AxiosResponse<Movie> = await axios.get(`${API_ENDPOINT.MOVIES}/${id}`);
+  getById = async (id: number): Promise<IMovie> =>
+    await axiosInstance
+      .get(`${API_RESOURCE.MOVIES}/${id}`)
+      .then(({ data }) => validateMovieResponse(data))
+      .catch((error: AxiosError) => {
+        if (error.code) showAlertMessage(error.code);
 
-      return { status: response.status, data: response.data };
-    } catch (error) {
-      const axiosError = error as AxiosError;
-
-      return { status: axiosError.response?.status, data: undefined };
-    }
-  };
+        return {} as IMovie;
+      });
 
   /**
    * Fetches the list of movies with expanded movie manager information.
    * @param {number} limit - Optional query parameters.
-   * @returns {Promise<Movie[]>} A promise resolving to the list of movies.
+   * @returns {Promise<IMovie[]>} A promise resolving to the list of movies.
    */
-  getMovieList = async (
-    limit: number = 0,
-  ): Promise<{ status: number | undefined; data: Movie[] | undefined }> => {
-    try {
-      const response = await axios.get(`${API_ENDPOINT.MOVIES}?${limit ? `_limit=${limit}` : ''}`);
-
-      return { status: response.status, data: response.data };
-    } catch (error) {
-      const axiosError = error as AxiosError;
-
-      return { status: axiosError.response?.status, data: undefined };
-    }
-  };
+  getList = async (limit: number = 0): Promise<IMovie[]> =>
+    await axiosInstance
+      .get(`${API_RESOURCE.MOVIES}?${limit ? `_limit=${limit}` : ''}`)
+      .then(({ data }) => data.map((item: IMovie) => validateMovieResponse(item)) as IMovie[])
+      .catch((error: AxiosError) => {
+        if (error.code) showAlertMessage(error.code);
+        
+        return [];
+      });
 
   /**
    * Fetches the list of movies with expanded movie manager information.
-   * @returns {Promise<Movie[]>} A promise resolving to the list of movies.
+   * @returns {Promise<IMovie[]>} A promise resolving to the list of movies.
    */
-  getMoviesByField = async ({
+  getListByField = async ({
     field,
     value = '',
     like = false,
     limit = 0,
   }: {
-    field: keyof Movie;
+    field: keyof IMovie;
     value: string | boolean | number;
     like?: boolean;
     limit?: number;
-  }): Promise<{ status: number | undefined; data: Movie[] | undefined }> => {
-    try {
-      const response = await axios.get(
-        `${API_ENDPOINT.MOVIES}?${limit ? `_limit=${limit}&${field}` : field}${
+  }): Promise<IMovie[]> =>
+    await axiosInstance
+      .get(
+        `${API_RESOURCE.MOVIES}?${limit ? `_limit=${limit}&${field}` : field}${
           like ? '_like' : ''
         }=${value}`,
-      );
+      )
+      .then(({ data }) => data.map((item: IMovie) => validateMovieResponse(item)) as IMovie[])
+      .catch((error: AxiosError) => {
+        if (error.code) showAlertMessage(error.code);
 
-      return { status: response.status, data: response.data };
-    } catch (error) {
-      const axiosError = error as AxiosError;
-
-      return { status: axiosError.response?.status, data: undefined };
-    }
-  };
+        return [];
+      });
 
   /**
    * Fetches the list of movies with expanded movie manager information.
-   * @returns {Promise<Movie[]>} A promise resolving to the list of movies.
+   * @returns {Promise<IMovie[]>} A promise resolving to the list of movies.
    */
-  filterMovies = async ({
+  filter = async ({
     category,
     favorites,
     incompleteness,
@@ -86,61 +80,52 @@ export class MovieModel {
     category: Category;
     favorites?: number;
     incompleteness?: number;
-  }): Promise<{ status: number | undefined; data: Movie[] | undefined }> => {
-    try {
-      const response = await axios.get(API_ENDPOINT.MOVIES, {
+  }): Promise<IMovie[]> =>
+    await axiosInstance
+      .get(API_RESOURCE.MOVIES, {
         params: {
           category: category,
           favorites_like: favorites,
           incompleteness_like: incompleteness,
         },
+      })
+      .then(({ data }) => data.map((item: IMovie) => validateMovieResponse(item)) as IMovie[])
+      .catch((error: AxiosError) => {
+        if (error.code) showAlertMessage(error.code);
+
+        return [];
       });
-
-      return { status: response.status, data: response.data };
-    } catch (error) {
-      const axiosError = error as AxiosError;
-
-      return { status: axiosError.response?.status, data: undefined };
-    }
-  };
 
   /**
    * Creates a new movie by sending a POST request to the API.
-   * @param {Movie} movie - The movie details to be created.
-   * @returns {Promise<{ status: number; data: Movie }>} A promise resolving to the created movie details.
+   * @param {IMovieOptionalField} movie - The movie details to be created.
+   * @returns {Promise<IMovie>} A promise resolving to the created movie details.
    */
-  createMovie = async (
-    movie: Movie,
-  ): Promise<{ status: number | undefined; data: Movie | undefined }> => {
-    try {
-      const response = await axios.post(API_ENDPOINT.MOVIES, movie);
+  create = async (movie: IMovieOptionalField): Promise<IMovie> =>
+    await axiosInstance
+      .post(API_RESOURCE.MOVIES, movie)
+      .then(({ data }) => validateMovieResponse(data))
+      .catch((error: AxiosError) => {
+        if (error.code) showAlertMessage(error.code);
 
-      return { status: response.status, data: response.data };
-    } catch (error) {
-      const axiosError = error as AxiosError;
-
-      return { status: axiosError.response?.status, data: undefined };
-    }
-  };
+        return {} as IMovie;
+      });
 
   /**
    * Updates an existing movie by sending a PATCH request to the API.
    * @param {number} id - The ID of the movie to update.
-   * @param {Movie} movie - The movie details to update.
-   * @returns {Promise<{ status: number; data: Movie }>} A promise resolving to the updated movie details.
+   * @param {IMovieOptionalField} movie - The movie details to update.
+   * @returns {Promise<IMovie>} A promise resolving to the updated movie details.
    */
-  updateMovie = async (
-    id: number,
-    movie: Movie,
-  ): Promise<{ status: number | undefined; data: Movie | undefined }> => {
-    try {
-      const response = await axios.patch(`${API_ENDPOINT.MOVIES}/${id}`, movie);
-
-      return { status: response.status, data: response.data };
-    } catch (error) {
-      const axiosError = error as AxiosError;
-
-      return { status: axiosError.response?.status, data: undefined };
-    }
-  };
+  update = async (id: number, movie: IMovieOptionalField): Promise<IMovie> =>
+    await axiosInstance
+      .patch(`${API_RESOURCE.MOVIES}/${id}`, movie)
+      .then(({ data }) => validateMovieResponse(data))
+      .catch((error: AxiosError) => {
+        if (error.code) showAlertMessage(error.code);
+        
+        return {} as IMovie;
+      });
 }
+
+export default Movie;

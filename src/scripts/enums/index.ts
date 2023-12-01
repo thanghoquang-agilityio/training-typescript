@@ -1,2 +1,3 @@
-export * from './movie';
-export * from './httpStatusCode';
+import TypeOfFilter from './typeOfFilter';
+
+export { TypeOfFilter };

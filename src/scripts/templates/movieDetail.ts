@@ -1,12 +1,13 @@
-import { Movie } from '@/interfaces';
-import { ERROR_MESSAGES, USER_ID } from '@/constants';
+import { stringHelper } from '@/utils';
+import { DEFAULT_LOGGED_USER_ID } from '@/constants';
+import { IMovie } from '@/interfaces';
 
 /**
  * Generates the details movie HTML template.
  * @param {Movie} movie - The data of movie.
  * @returns {string} - The generated HTML template for the details movie.
  */
-const movieDetailTemplate = (movie: Movie): string => `
+const movieDetailTemplate = (movie: IMovie): string => `
     <img
       class="card-details-cover-image"
       src="${movie?.image}"
@@ -30,25 +31,19 @@ const movieDetailTemplate = (movie: Movie): string => `
       </div>
       <span class="text-card">${movie?.release}</span>
       <span class="text-card">${movie?.type}</span>
-      <span class="text-card">${movie?.duration}</span>
+      <span class="text-card">${stringHelper.formatDuration(movie?.duration)}</span>
       <p class="text">${movie?.description}</p>
       <div class="card-details-actions">
-        <button class="button-watch-movie">Watch now</button>
+        <button class="button-watch-movie text-button">Watch now</button>
         <button class="button-heart-movie" id=${movie?.id} data-favorites=${movie?.favorites}>
           <img src=${
-            movie?.favorites.includes(USER_ID) ? './icons/heart-full.svg' : './icons/heart.svg'
+            movie?.favorites.includes(DEFAULT_LOGGED_USER_ID)
+              ? './icons/heart-full.svg'
+              : './icons/heart.svg'
           } alt="heart-icon" />
         </button>
       </div>
     </div>
   `;
 
-export const renderMovieDetail = (movie: Movie) => {
-  const movieDetailElement: HTMLElement | null = document.querySelector('.card-details');
-
-  if (movieDetailElement) {
-    movieDetailElement.innerHTML = movieDetailTemplate(movie);
-  } else {
-    window.alert(ERROR_MESSAGES.renderMovieDetails);
-  }
-};
+export default movieDetailTemplate;
