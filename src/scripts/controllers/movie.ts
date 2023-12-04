@@ -166,7 +166,13 @@ class Movie {
     }
 
     if (typeOfFilter !== TypeOfFilter.Favorites) {
-      this.movieList[typeOfFilter].forEach((movie: IMovie) => {
+      this.movieList.trending.forEach((movie: IMovie) => {
+        if (movie.id === movieId) {
+          movie.favorites = favorites;
+        }
+      });
+
+      this.movieList.continueWatching.forEach((movie: IMovie) => {
         if (movie.id === movieId) {
           movie.favorites = favorites;
         }
