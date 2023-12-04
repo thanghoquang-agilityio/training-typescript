@@ -1,39 +1,39 @@
-.lasted-movie {
-  background-position: center;
-  background-image: url('../../images/bgr-lasted-movie.png');
-  background-size: cover;
+.cover-movie {
   height: 455px;
+  background-image: url('../../images/bgr-cover-movie.png');
+  background-position: center;
+  background-size: cover;
 }
 
-.lasted-movie-container {
+.cover-movie-container {
   margin: 0 42px auto 32px;
 }
 
-.lasted-movie-actions button {
+.cover-movie-actions button {
   cursor: not-allowed;
 }
 
-.lasted-movie .navbar {
+.cover-movie .navbar {
   padding-top: 47px;
 }
 
-.lasted-movie-title {
+.cover-movie-title {
   margin-top: 152px;
   font-size: var(--font-size-4xl);
-  line-height: 48px;
   font-family: var(--primary-font);
   font-weight: var(--font-weight-medium);
+  line-height: 48px;
   text-align: left;
   color: var(--text-color-primary);
 }
 
-.lasted-movie .text-sub-title {
+.cover-movie .text-sub-title {
   margin-top: 20px;
   line-height: 20px;
   color: var(--text-color-primary);
 }
 
-.lasted-movie-actions {
+.cover-movie-actions {
   display: flex;
   align-items: center;
   margin-top: 36px;

@@ -6,7 +6,7 @@ import {
 } from '@/constants';
 import { TypeOfFilter } from '@/enums';
 
-import { Category, FilteredMovieList, PathnameValid } from '@/types';
+import { Category, FilteredMovieList, Path } from '@/types';
 import { IMovie, IMovieOptionalField } from '@/interfaces';
 
 import { renderSidebar, renderNavbar, renderMovieList, renderMovieDetail } from '@/renders';
@@ -18,7 +18,7 @@ class Movie {
   model: MovieModel;
   view: MovieView;
   movieList: FilteredMovieList;
-  pathname: PathnameValid;
+  pathname: Path;
 
   constructor(model: MovieModel, view: MovieView) {
     this.model = model;
@@ -29,7 +29,7 @@ class Movie {
       continueWatching: [],
     };
 
-    this.pathname = window.location.pathname as PathnameValid;
+    this.pathname = window.location.pathname as Path;
     this.initData(this.pathname);
 
     renderSidebar(this.pathname);
@@ -42,8 +42,9 @@ class Movie {
   /**
    * Handles create data of the page is displayed
    * @param {string} path - The page is displayed.
+   * @returns {Promise<void>}
    */
-  private initData = async (path: PathnameValid) => {
+  private initData = async (path: Path): Promise<void> => {
     switch (path) {
       case ROUTES.homePage: {
         this.movieList.continueWatching = await this.model.getListByField({
@@ -90,8 +91,9 @@ class Movie {
   /**
    * Handles render data of the page is displayed
    * @param {string} path - The page is displayed.
+   * @returns {void}
    */
-  private displayMovieList = async (path: PathnameValid) => {
+  private displayMovieList = (path: Path): void => {
     switch (path) {
       case ROUTES.homePage: {
         renderMovieList(this.movieList.trending, TypeOfFilter.Trending);
@@ -129,6 +131,7 @@ class Movie {
    * Handles the change of favorites movie
    * @param {number} movieId - The ID of the movie to be updated in favorites page.
    * @param {FilteredMovieList} typeOfFilter - The type of the movie.
+   * @returns {Promise<boolean>} A promise status success or fail
    */
   private updateFavorites = async (
     movieId: number,
@@ -179,11 +182,12 @@ class Movie {
    * Handles the deletion of a movie in favorites page.
    * @param {number} movieId - The ID of the movie to be removed in favorites page.
    * @param {FilteredMovieList} typeOfFilter - The type of the movie.
+   * @returns {Promise<void>}
    */
   private removeMovieInFavorites = async (
     movieId: number,
     typeOfFilter: keyof FilteredMovieList,
-  ) => {
+  ): Promise<void> => {
     const isSuccess = await this.updateFavorites(movieId, typeOfFilter);
 
     if (isSuccess) {
@@ -196,8 +200,9 @@ class Movie {
   /**
    * Handles the display movie detail
    * @param {number} movieId - The ID of the movie to be displayed detail in trending page.
+   * @returns {Promise<void>}
    */
-  private displayMovieDetail = async (movieId: number) => {
+  private displayMovieDetail = async (movieId: number): Promise<void> => {
     // Call API get movie by id
     const movie = await this.model.getById(movieId);
 
@@ -209,8 +214,9 @@ class Movie {
   /**
    * Handles render data of the movie is displayed
    * @param {Movie} movie - The movie is displayed.
+   * @returns {void}
    */
-  private renderDetail = (movie: IMovie) => {
+  private renderDetail = (movie: IMovie): void => {
     renderMovieDetail(movie);
 
     this.view.getMovieIdByHeartButton(this.updateFavoriteDetail);
@@ -219,11 +225,12 @@ class Movie {
   /**
    * Handles the change of favorites movie
    * @param {number} movieId - The ID of the movie to be updated in favorites page.
+   * @returns {Promise<void>}
    */
   private updateFavoritesTrending = async (
     movieId: number,
     typeOfFilter: keyof FilteredMovieList,
-  ) => {
+  ): Promise<void> => {
     const hasDetail: boolean = this.view.getImageDetailElement();
 
     if (hasDetail) {
@@ -249,8 +256,9 @@ class Movie {
   /**
    * Handles the change of favorites movie
    * @param {number} movieId - The ID of the movie to be updated in favorites page.
+   * @returns {Promise<void>}
    */
-  private updateFavoriteDetail = async (movieId: number) => {
+  private updateFavoriteDetail = async (movieId: number): Promise<void> => {
     const typeOfFilter: keyof FilteredMovieList = TypeOfFilter.Trending;
     const movie = this.movieList[typeOfFilter].find((movie: IMovie) => movie.id === movieId);
 
@@ -272,9 +280,9 @@ class Movie {
   /**
    * Handles the filter of movie data
    * @param {string} filterValue - category was clicked.
-   * For example, the movie filter has a category of Series,...
+   * @returns {Promise<void>}
    */
-  private filterMovieList = async (filterValue: Category) => {
+  private filterMovieList = async (filterValue: Category): Promise<void> => {
     switch (this.pathname) {
       case ROUTES.homePage: {
         const movieContinueWatching = await this.model.filter({
@@ -327,8 +335,9 @@ class Movie {
   /**
    * Handles the display movie in form
    * @param {number} movieId - The ID of the movie to be displayed detail in form.
+   * @returns {Promise<void>}
    */
-  private displayMovieUpdate = async (movieId: number) => {
+  private displayMovieUpdate = async (movieId: number): Promise<void> => {
     // Call API get movie by id
     const movieIndex = this.movieList.trending.findIndex((movie: IMovie) => movie.id === movieId);
     const movie = this.movieList.trending[movieIndex];
@@ -339,8 +348,9 @@ class Movie {
   /**
    * Handles submit form movie
    * @param {Movie} movie - data from form.
+   * @returns {Promise<void>}
    */
-  submitMovieForm = async (movie: IMovieOptionalField) => {
+  submitMovieForm = async (movie: IMovieOptionalField): Promise<void> => {
     if (movie.id) {
       const updatedMovie = await this.model.update(movie.id, movie);
 

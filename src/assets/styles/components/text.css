@@ -1,7 +1,7 @@
 .text {
   font-size: var(--font-size-md);
-  line-height: 24px;
   font-family: var(--primary-font);
+  line-height: 24px;
   text-align: left;
 }
 
@@ -14,18 +14,18 @@
 
 .text-title-section {
   font-size: var(--font-size-2xl);
-  line-height: 30px;
   font-family: var(--primary-font);
   font-weight: var(--font-weight-medium);
+  line-height: 30px;
   text-align: left;
   color: var(--text-color-primary);
 }
 
 .text-card {
   font-size: var(--font-size-xl);
-  line-height: 24px;
   font-family: var(--primary-font);
   font-weight: var(--font-weight-regular);
+  line-height: 24px;
   text-align: left;
   color: var(--text-color-primary);
 }
@@ -38,9 +38,9 @@
 
 .text-button {
   font-size: var(--font-size-md);
-  line-height: 20px;
   font-family: var(--primary-font);
-  font-weight: var(--font-weight-regular);
   font-style: normal;
+  font-weight: var(--font-weight-regular);
+  line-height: 20px;
   color: var(--text-color-primary);
 }

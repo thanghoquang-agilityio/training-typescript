@@ -1,12 +1,6 @@
-import {
-  resetErrors,
-  validateForm,
-  stringHelper,
-  extractFormData,
-  showAlertMessage,
-} from '@/utils';
+import { resetErrors, validateForm, stringHelper, extractFormData } from '@/utils';
 
-import { ERROR_MESSAGES, FORM_TITLES, NAVBAR_LIST } from '@/constants';
+import { FORM_TITLES, NAVBAR_LIST } from '@/constants';
 
 import { Category, FilteredMovieList } from '@/types';
 import { IMovie, IMovieOptionalField } from '@/interfaces';
@@ -14,7 +8,6 @@ import { IMovie, IMovieOptionalField } from '@/interfaces';
 class Movie {
   private movieDetailElement: HTMLElement;
   private trendingElement: HTMLElement;
-  private imageMovieDetailElement: HTMLElement;
   private heartButtonMovieElement: NodeListOf<HTMLElement>;
   private movieDisplayedElement: HTMLElement;
   private movieListElement: NodeListOf<HTMLElement>;
@@ -50,9 +43,6 @@ class Movie {
     // Initialize elements
     this.movieDetailElement = document.querySelector('.card-details') as HTMLElement;
     this.trendingElement = document.querySelector('.trending-now') as HTMLElement;
-    this.imageMovieDetailElement = document.querySelector(
-      '.card-details-cover-image',
-    ) as HTMLElement;
     this.heartButtonMovieElement = document.querySelectorAll<HTMLElement>('.button-heart-card');
     this.movieDisplayedElement = document.querySelector('.card-being-displayed') as HTMLElement;
     this.movieListElement = document.querySelectorAll<HTMLElement>('.card-img');
@@ -107,7 +97,9 @@ class Movie {
         ) as keyof FilteredMovieList;
 
         if (movieId && typeOfFilter) {
-          handleUpdateFavorites(parseInt(movieId), typeOfFilter);
+          const id = parseInt(movieId);
+
+          handleUpdateFavorites(id, typeOfFilter);
         }
       });
     });
@@ -151,7 +143,7 @@ class Movie {
 
   /**
    * Get movie Id when click movie card to show the details.
-   * @param {Function} handleShowDetail - The function show movie details.
+   * @param {Function} handleShowDetails - The function show movie details.
    */
   getMovieIdByMovieCard = (handleShowDetails: (id: number) => void) => {
     this.trendingElement = document.querySelector('.trending-now') as HTMLElement;
@@ -178,7 +170,9 @@ class Movie {
           this.movieDisplayedElement.classList.remove('card-being-displayed');
         }
 
-        handleShowDetails(parseInt(movieId));
+        const id = parseInt(movieId);
+
+        handleShowDetails(id);
 
         // Update style for movie was displayed
         parentFigureElement.classList.add('card-being-displayed');
@@ -193,16 +187,18 @@ class Movie {
 
   /**
    * Get movie Id when click heart button to the change favorites.
-   * @param {Function} handler - The change event handler function.
+   * @param {Function} handleUpdateFavorites - The function update favorites.
    */
-  getMovieIdByHeartButton = (handler: (id: number) => void) => {
+  getMovieIdByHeartButton = (handleUpdateFavorites: (id: number) => void) => {
     this.heartButtonDetailElement = document.querySelector('.button-heart-movie') as HTMLElement;
 
     this.heartButtonDetailElement.addEventListener('click', () => {
       const movieId = this.heartButtonDetailElement.getAttribute('id');
 
       if (movieId) {
-        handler(parseInt(movieId));
+        const id = parseInt(movieId);
+
+        handleUpdateFavorites(id);
       }
     });
   };
@@ -389,7 +385,9 @@ class Movie {
         const movieId = parentFigureElement.getAttribute('id');
 
         if (movieId) {
-          handleShowMovieInForm(parseInt(movieId));
+          const id = parseInt(movieId);
+
+          handleShowMovieInForm(id);
         }
       });
     });
@@ -411,7 +409,7 @@ class Movie {
 
   /**
    * Submit form movie.
-   * @param {Function} handleSubmit - The submit event handler function.
+   * @param {Function} handleSubmit - The submit event function.
    */
   getDataInMovieForm = (handleSubmit: (movie: IMovieOptionalField) => void) => {
     if (!this.submitButtonFormElement) {

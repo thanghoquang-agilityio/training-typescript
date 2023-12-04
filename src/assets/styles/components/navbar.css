@@ -41,3 +41,7 @@
 .avatar-profile {
   margin-right: 8px;
 }
+
+.navbar-categories-active {
+  font-weight: var(--font-weight-bold);
+}

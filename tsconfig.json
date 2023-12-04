@@ -7,11 +7,10 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "isolatedModules": true,
     "types": ["node"],
     "paths": {
       "@/*": ["./src/scripts/*"]
     }
   },
-  "include": ["**/*.ts", "./cypress/interfaces/*.d.ts"]
+  "include": ["**/*.ts"]
 }

@@ -3,12 +3,12 @@
 }
 
 .form-input-text {
+  outline: none;
   margin-top: 10px;
-  border-radius: 20px;
   border: 1px solid var(--text-color-secondary);
+  border-radius: 20px;
   width: calc(100% - 32px);
   padding: 16px;
-  outline: none;
   font-size: var(--font-size-sm);
   font-family: var(--primary-font);
   font-weight: var(--font-weight-light);
@@ -16,12 +16,12 @@
 }
 
 .form-input-other {
+  outline: none;
   margin-top: 10px;
-  border-radius: 20px;
   border: 1px solid var(--text-color-secondary);
+  border-radius: 20px;
   width: 100%;
   padding: 16px;
-  outline: none;
   font-size: var(--font-size-sm);
   font-family: var(--primary-font);
   font-weight: var(--font-weight-light);

@@ -10,7 +10,4 @@ const FORM_INPUTS = {
   number: 'number',
 };
 
-const MIN_YEAR = 1890;
-const MAX_YEAR = 2023;
-
-export { FORM_TITLES, FORM_INPUTS, MIN_YEAR, MAX_YEAR };
+export { FORM_TITLES, FORM_INPUTS };

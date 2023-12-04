@@ -1,9 +1,9 @@
 import { showAlertMessage } from '@/utils';
 import { ERROR_MESSAGES } from '@/constants';
-import { PathnameValid } from '@/types';
+import { Path } from '@/types';
 import { sidebarTemplate } from '@/templates';
 
-const renderSidebar = (currentPath: PathnameValid) => {
+const renderSidebar = (currentPath: Path) => {
   const sidebarElement = document.querySelector('.sidebar') as HTMLElement;
 
   if (!sidebarElement) {
