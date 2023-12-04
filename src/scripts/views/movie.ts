@@ -172,7 +172,7 @@ class Movie {
 
         const id = parseInt(movieId);
 
-        handleShowDetails(id);
+        await handleShowDetails(id);
 
         // Update style for movie was displayed
         parentFigureElement.classList.add('card-being-displayed');

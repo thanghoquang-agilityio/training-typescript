@@ -36,12 +36,16 @@ class Movie {
       .then(({ data }) => data.map((item: IMovie) => validateMovieResponse(item)) as IMovie[])
       .catch((error: AxiosError) => {
         if (error.code) showAlertMessage(error.code);
-        
+
         return [];
       });
 
   /**
    * Fetches the list of movies with expanded movie manager information.
+   * @param {keyof IMovie} .field - The field of movie.
+   * @param {string | boolean | number} .value - The data select.
+   * @param {boolean} .like - Optional query parameters.
+   * @param {number} .limit - Optional query parameters.
    * @returns {Promise<IMovie[]>} A promise resolving to the list of movies.
    */
   getListByField = async ({
@@ -70,6 +74,9 @@ class Movie {
 
   /**
    * Fetches the list of movies with expanded movie manager information.
+   * @param {Category} .category - The category select.
+   * @param {number} .favorites - Optional query parameters.
+   * @param {number} .incompleteness - Optional query parameters.
    * @returns {Promise<IMovie[]>} A promise resolving to the list of movies.
    */
   filter = async ({
@@ -123,7 +130,7 @@ class Movie {
       .then(({ data }) => validateMovieResponse(data))
       .catch((error: AxiosError) => {
         if (error.code) showAlertMessage(error.code);
-        
+
         return {} as IMovie;
       });
 }
