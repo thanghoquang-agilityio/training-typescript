@@ -18,4 +18,4 @@ interface IMovie {
 
 interface IMovieOptionalField extends Partial<IMovie> {}
 
-export type { IMovie, IMovieOptionalField };
+export { IMovie, IMovieOptionalField };

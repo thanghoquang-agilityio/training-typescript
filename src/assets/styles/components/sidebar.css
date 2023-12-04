@@ -1,10 +1,10 @@
 .sidebar {
   display: flex;
   flex-direction: column;
+  box-shadow: 2px 0px 90px 0px var(--box-shadow-color-sidebar);
   min-width: 194px;
   padding: 40px;
   background-color: var(--background-color-secondary);
-  box-shadow: 2px 0px 90px 0px var(--box-shadow-color-sidebar);
 }
 
 .sidebar::after {
@@ -67,6 +67,6 @@
 
 .sidebar-actions .sidebar-active {
   opacity: 1;
-  font-weight: var(--font-weight-bold);
   font-family: var(--primary-font);
+  font-weight: var(--font-weight-bold);
 }

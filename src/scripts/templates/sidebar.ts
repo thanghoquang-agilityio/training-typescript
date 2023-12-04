@@ -1,12 +1,12 @@
 import { SIDEBAR_LIST } from '@/constants';
-import { PathnameValid } from '@/types';
+import { Path } from '@/types';
 
 /**
  * Generates the sidebar HTML template based on current path.
  * @param {string} currentPath - The current path of the application.
  * @returns {string} - The generated HTML template for the sidebar.
  */
-const sidebarTemplate = (currentPath: PathnameValid): string => {
+const sidebarTemplate = (currentPath: Path): string => {
   const sidebarItemsHTML = SIDEBAR_LIST.map(
     (item) =>
       `

@@ -1,3 +1,4 @@
-import type { Category, FilteredMovieList, PathnameValid } from './movie';
+import { Category, FilteredMovieList } from './movie';
+import Path from './path';
 
-export { Category, FilteredMovieList, PathnameValid };
+export { Category, FilteredMovieList, Path };

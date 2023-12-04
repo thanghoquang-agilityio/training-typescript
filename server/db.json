@@ -87,7 +87,7 @@
       "duration": 7885,
       "description": "Studying galaxies is crucial in the field of astronomy as it provides insights into the universe's evolution, structure, and composition. Understanding different types of galaxies and their behaviors helps scientists comprehend the vast expanse of the cosmos, the formation of stars and planetary systems, and the distribution of dark matter.",
       "isTrending": false,
-      "favorites": [],
+      "favorites": [1],
       "incompleteness": [1]
     },
     {
@@ -109,14 +109,14 @@
       "id": 9,
       "title": "Galaxy science",
       "image": "./images/galaxy.png",
-      "category": "documentaries",
+      "category": "series",
       "type": "Documentary",
       "release": 2018,
       "rating": 7.5,
       "video": "./videos/cat.mp4",
       "duration": 8985,
       "description": "Studying galaxies is crucial in the field of astronomy as it provides insights into the universe's evolution, structure, and composition. Understanding different types of galaxies and their behaviors helps scientists comprehend the vast expanse of the cosmos, the formation of stars and planetary systems, and the distribution of dark matter.",
-      "isTrending": false,
+      "isTrending": true,
       "favorites": [],
       "incompleteness": [1]
     }
