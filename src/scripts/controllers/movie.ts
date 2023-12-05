@@ -376,6 +376,12 @@ class Movie {
         );
       }
 
+      const movieIndex = this.movieList.continueWatching.findIndex(
+        (movie: IMovie) => movie.id === updatedMovie?.id,
+      );
+
+      this.movieList.continueWatching[movieIndex] = updatedMovie;
+
       this.displayMovieList(this.pathname);
     } else {
       const createdMovie = await this.model.create(movie);
