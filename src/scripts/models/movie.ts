@@ -1,10 +1,10 @@
 import { AxiosError } from 'axios';
 
-import { showAlertMessage, validateMovieResponse } from '@/utils';
+import { validateMovieResponse } from '@/utils';
 
 import { API_RESOURCE } from '@/constants';
 
-import { Category } from '@/types';
+import { Category, ResponseMovie, ResponseMovieList } from '@/types';
 import { IMovie, IMovieOptionalField } from '@/interfaces';
 
 import axiosInstance from '@/services/axiosInstance';
@@ -13,32 +13,52 @@ class Movie {
   /**
    * Fetches movie details by movie ID from the API.
    * @param {number} id - The ID of the movie to fetch.
-   * @returns {Promise<IMovie>} A promise resolving to the movie details response.
+   * @returns {Promise<ResponseMovie>} A promise resolving to the movie details response.
    */
-  getById = async (id: number): Promise<IMovie> =>
-    await axiosInstance
+  getById(id: number): Promise<ResponseMovie> {
+    return axiosInstance
       .get(`${API_RESOURCE.MOVIES}/${id}`)
-      .then(({ data }) => validateMovieResponse(data))
-      .catch((error: AxiosError) => {
-        if (error.code) showAlertMessage(error.code);
+      .then(({ data }) => {
+        const responseSuccess: ResponseMovie = {
+          data: validateMovieResponse(data),
+        };
 
-        return {} as IMovie;
+        return responseSuccess;
+      })
+      .catch((error: AxiosError) => {
+        const responseError: ResponseMovie = {
+          code: error.code,
+          data: {} as IMovie,
+        };
+
+        return responseError;
       });
+  }
 
   /**
    * Fetches the list of movies with expanded movie manager information.
    * @param {number} limit - Optional query parameters.
-   * @returns {Promise<IMovie[]>} A promise resolving to the list of movies.
+   * @returns {Promise<ResponseMovieList>} A promise resolving to the list of movies.
    */
-  getList = async (limit: number = 0): Promise<IMovie[]> =>
-    await axiosInstance
+  getList(limit: number = 0): Promise<ResponseMovieList> {
+    return axiosInstance
       .get(`${API_RESOURCE.MOVIES}?${limit ? `_limit=${limit}` : ''}`)
-      .then(({ data }) => data.map((item: IMovie) => validateMovieResponse(item)) as IMovie[])
-      .catch((error: AxiosError) => {
-        if (error.code) showAlertMessage(error.code);
+      .then(({ data }) => {
+        const responseSuccess: ResponseMovieList = {
+          data: data.map((item: IMovie) => validateMovieResponse(item)),
+        };
 
-        return [];
+        return responseSuccess;
+      })
+      .catch((error: AxiosError) => {
+        const responseError: ResponseMovieList = {
+          code: error.code,
+          data: [],
+        };
+
+        return responseError;
       });
+  }
 
   /**
    * Fetches the list of movies with expanded movie manager information.
@@ -46,9 +66,9 @@ class Movie {
    * @param {string | boolean | number} .value - The data select.
    * @param {boolean} .like - Optional query parameters.
    * @param {number} .limit - Optional query parameters.
-   * @returns {Promise<IMovie[]>} A promise resolving to the list of movies.
+   * @returns {Promise<ResponseMovieList>} A promise resolving to the list of movies.
    */
-  getListByField = async ({
+  getListByField({
     field,
     value = '',
     like = false,
@@ -58,28 +78,38 @@ class Movie {
     value: string | boolean | number;
     like?: boolean;
     limit?: number;
-  }): Promise<IMovie[]> =>
-    await axiosInstance
+  }): Promise<ResponseMovieList> {
+    return axiosInstance
       .get(
         `${API_RESOURCE.MOVIES}?${limit ? `_limit=${limit}&${field}` : field}${
           like ? '_like' : ''
         }=${value}`,
       )
-      .then(({ data }) => data.map((item: IMovie) => validateMovieResponse(item)) as IMovie[])
-      .catch((error: AxiosError) => {
-        if (error.code) showAlertMessage(error.code);
+      .then(({ data }) => {
+        const responseSuccess: ResponseMovieList = {
+          data: data.map((item: IMovie) => validateMovieResponse(item)),
+        };
 
-        return [];
+        return responseSuccess;
+      })
+      .catch((error: AxiosError) => {
+        const responseError: ResponseMovieList = {
+          code: error.code,
+          data: [],
+        };
+
+        return responseError;
       });
+  }
 
   /**
    * Fetches the list of movies with expanded movie manager information.
    * @param {Category} .category - The category select.
    * @param {number} .favorites - Optional query parameters.
    * @param {number} .incompleteness - Optional query parameters.
-   * @returns {Promise<IMovie[]>} A promise resolving to the list of movies.
+   * @returns {Promise<ResponseMovieList>} A promise resolving to the list of movies.
    */
-  filter = async ({
+  filter({
     category,
     favorites,
     incompleteness,
@@ -87,8 +117,8 @@ class Movie {
     category: Category;
     favorites?: number;
     incompleteness?: number;
-  }): Promise<IMovie[]> =>
-    await axiosInstance
+  }): Promise<ResponseMovieList> {
+    return axiosInstance
       .get(API_RESOURCE.MOVIES, {
         params: {
           category: category,
@@ -96,43 +126,73 @@ class Movie {
           incompleteness_like: incompleteness,
         },
       })
-      .then(({ data }) => data.map((item: IMovie) => validateMovieResponse(item)) as IMovie[])
-      .catch((error: AxiosError) => {
-        if (error.code) showAlertMessage(error.code);
+      .then(({ data }) => {
+        const responseSuccess: ResponseMovieList = {
+          data: data.map((item: IMovie) => validateMovieResponse(item)),
+        };
 
-        return [];
+        return responseSuccess;
+      })
+      .catch((error: AxiosError) => {
+        const responseError: ResponseMovieList = {
+          code: error.code,
+          data: [],
+        };
+
+        return responseError;
       });
+  }
 
   /**
    * Creates a new movie by sending a POST request to the API.
    * @param {IMovieOptionalField} movie - The movie details to be created.
-   * @returns {Promise<IMovie>} A promise resolving to the created movie details.
+   * @returns {Promise<ResponseMovie>} A promise resolving to the created movie details.
    */
-  create = async (movie: IMovieOptionalField): Promise<IMovie> =>
-    await axiosInstance
+  create(movie: IMovieOptionalField): Promise<ResponseMovie> {
+    return axiosInstance
       .post(API_RESOURCE.MOVIES, movie)
-      .then(({ data }) => validateMovieResponse(data))
-      .catch((error: AxiosError) => {
-        if (error.code) showAlertMessage(error.code);
+      .then(({ data }) => {
+        const responseSuccess: ResponseMovie = {
+          data: validateMovieResponse(data),
+        };
 
-        return {} as IMovie;
+        return responseSuccess;
+      })
+      .catch((error: AxiosError) => {
+        const responseError: ResponseMovie = {
+          code: error.code,
+          data: {} as IMovie,
+        };
+
+        return responseError;
       });
+  }
 
   /**
    * Updates an existing movie by sending a PATCH request to the API.
    * @param {number} id - The ID of the movie to update.
    * @param {IMovieOptionalField} movie - The movie details to update.
-   * @returns {Promise<IMovie>} A promise resolving to the updated movie details.
+   * @returns {Promise<ResponseMovie>} A promise resolving to the updated movie details.
    */
-  update = async (id: number, movie: IMovieOptionalField): Promise<IMovie> =>
-    await axiosInstance
+  update(id: number, movie: IMovieOptionalField): Promise<ResponseMovie> {
+    return axiosInstance
       .patch(`${API_RESOURCE.MOVIES}/${id}`, movie)
-      .then(({ data }) => validateMovieResponse(data))
-      .catch((error: AxiosError) => {
-        if (error.code) showAlertMessage(error.code);
+      .then(({ data }) => {
+        const responseSuccess: ResponseMovie = {
+          data: validateMovieResponse(data),
+        };
 
-        return {} as IMovie;
+        return responseSuccess;
+      })
+      .catch((error: AxiosError) => {
+        const responseError: ResponseMovie = {
+          code: error.code,
+          data: {} as IMovie,
+        };
+
+        return responseError;
       });
+  }
 }
 
 export default Movie;

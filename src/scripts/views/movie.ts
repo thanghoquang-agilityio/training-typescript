@@ -76,10 +76,11 @@ class Movie {
   /**
    * Get movie Id when click heart button to the change favorites.
    * @param {Function} handleUpdateFavorites - The function update favorites.
+   * @returns {void}
    */
-  getMovieIdByMovieButton = (
+  getMovieIdByMovieButton(
     handleUpdateFavorites: (id: number, typeOfFilter: keyof FilteredMovieList) => void,
-  ) => {
+  ): void {
     this.heartButtonMovieElement = document.querySelectorAll<HTMLElement>('.button-heart-card');
 
     this.heartButtonMovieElement.forEach((element: HTMLElement) => {
@@ -103,35 +104,38 @@ class Movie {
         }
       });
     });
-  };
+  }
 
   /**
    * Add loading card movie when clicking favorite button in card movie
+   * @returns {void}
    */
-  addLoadingMovieButton = () => {
+  addLoadingMovieButton(): void {
     // Add loading when movie detail was displayed
     this.movieDetailElement.classList.add('card-details-loading');
     // Add prevent event for movie list
     this.trendingElement.classList.add('trending-now-loading');
     // Add prevent event for movie list
     this.trendingElement.classList.add('trending-now-loading');
-  };
+  }
 
   /**
    * Add loading card movie when clicking favorite button in card details
+   * @returns {void}
    */
-  addLoadingHeartButton = () => {
+  addLoadingHeartButton(): void {
     this.movieDisplayedElement = document.querySelector('.card-being-displayed') as HTMLElement;
     // Add loading for movie card
     this.movieDisplayedElement.classList.add('card-loading');
     this.addLoadingMovieButton();
-  };
+  }
 
   /**
    * Remove loading card movie when clicking favorite button
    * @param {string} movieId - The id of movie.
+   * @returns {void}
    */
-  updateLoadingFavorites = (movieId: number) => {
+  updateLoadingFavorites(movieId: number): void {
     this.movieDisplayedElement = document.getElementById(movieId.toString()) as HTMLElement;
     // Re-render movie detail
     this.movieDisplayedElement.classList.add('card-being-displayed');
@@ -139,13 +143,14 @@ class Movie {
     this.movieDetailElement.classList.remove('card-details-loading');
     // Remove prevent event for movie list
     this.trendingElement.classList.remove('trending-now-loading');
-  };
+  }
 
   /**
    * Get movie Id when click movie card to show the details.
    * @param {Function} handleShowDetails - The function show movie details.
+   * @returns {void}
    */
-  getMovieIdByMovieCard = (handleShowDetails: (id: number) => void) => {
+  getMovieIdByMovieCard(handleShowDetails: (id: number) => void): void {
     this.trendingElement = document.querySelector('.trending-now') as HTMLElement;
     this.movieListElement = this.trendingElement.querySelectorAll<HTMLElement>('.card-img');
 
@@ -183,13 +188,14 @@ class Movie {
         this.movieDetailElement.classList.remove('card-loading');
       });
     });
-  };
+  }
 
   /**
    * Get movie Id when click heart button to the change favorites.
    * @param {Function} handleUpdateFavorites - The function update favorites.
+   * @returns {void}
    */
-  getMovieIdByHeartButton = (handleUpdateFavorites: (id: number) => void) => {
+  getMovieIdByHeartButton(handleUpdateFavorites: (id: number) => void): void {
     this.heartButtonDetailElement = document.querySelector('.button-heart-movie') as HTMLElement;
 
     this.heartButtonDetailElement.addEventListener('click', () => {
@@ -201,12 +207,13 @@ class Movie {
         handleUpdateFavorites(id);
       }
     });
-  };
+  }
 
   /**
    * Get image movie detail.
+   * @returns {boolean}
    */
-  getImageDetailElement = (): boolean => {
+  getImageDetailElement(): boolean {
     this.imageDetailElement = document.querySelector('.card-details-cover-image') as HTMLElement;
 
     if (this.imageDetailElement) {
@@ -214,13 +221,14 @@ class Movie {
     }
 
     return false;
-  };
+  }
 
   /**
    * Get category to filter movie list.
    * @param {Function} handleFilterMovie - The function filter movie.
+   * @returns {void}
    */
-  filterMovie = (handleFilterMovie: (filter: Category) => void) => {
+  filterMovie(handleFilterMovie: (filter: Category) => void): void {
     this.categoryNavbarElement = document.querySelector('.navbar-categories') as HTMLElement;
     this.filterListElement = this.categoryNavbarElement.querySelectorAll<HTMLElement>('.text');
 
@@ -237,12 +245,13 @@ class Movie {
         }
       });
     });
-  };
+  }
 
   /**
    * Remove movie detail.
+   * @returns {void}
    */
-  private removeMovieDetail = () => {
+  private removeMovieDetail(): void {
     if (this.movieDetailElement) {
       this.movieDetailElement.innerHTML = '';
 
@@ -250,34 +259,37 @@ class Movie {
         this.trendingElement.classList.remove('trending-now-after-loading');
       }
     }
-  };
+  }
 
   /**
    * Remove loading.
+   * @returns {void}
    */
-  removeLoading = () => {
+  removeLoading(): void {
     this.loadingElement = document.querySelectorAll<HTMLElement>('.card-loading');
 
     this.loadingElement.forEach((element: HTMLElement) => {
       element.classList.remove('card-loading');
     });
-  };
+  }
 
   /**
    * Add loading when loading movie list.
+   * @returns {void}
    */
-  private addLoadingMovieList = () => {
+  private addLoadingMovieList(): void {
     this.loadingElement.forEach((element: HTMLElement) => {
       element.innerHTML = '<span class="loader"></span>';
       element.classList.add('card-loading');
     });
-  };
+  }
 
   /**
    * Populate a <select> element with options based on a list of NAVBAR_LIST.
    * @param {HTMLSelectElement} selectElement - The <select> element to populate.
+   * @returns {void}
    */
-  private addOption = (selectElement: HTMLSelectElement) => {
+  private addOption(selectElement: HTMLSelectElement): void {
     NAVBAR_LIST.forEach((item) => {
       const option = document.createElement('option');
 
@@ -286,13 +298,14 @@ class Movie {
 
       selectElement.appendChild(option);
     });
-  };
+  }
 
   /**
    * Display form create of movie.
    * @param {Movie} movie - The movie may or may not be there.
+   * @returns {void}
    */
-  displayFormMovie = (movie?: IMovie) => {
+  displayFormMovie(movie?: IMovie): void {
     this.categorySelectElement.innerHTML = '';
     this.divFormMovieElement.classList.add('display-block');
     this.addOption(this.categorySelectElement);
@@ -318,12 +331,13 @@ class Movie {
     this.closeFormByClickOutSide();
     this.changeInputFile();
     this.addCloseFormMovie();
-  };
+  }
 
   /**
    * Update preview file in form movie.
+   * @returns {void}
    */
-  private changeInputFile = () => {
+  private changeInputFile(): void {
     this.videoElement.addEventListener('change', () => {
       this.videoClosetElement.classList.remove('display-block');
       this.videoPreviewElement.src = '#';
@@ -333,12 +347,13 @@ class Movie {
       this.imagePreviewElement.classList.remove('display-block');
       this.imagePreviewElement.src = '#';
     });
-  };
+  }
 
   /**
    * Close form of movie.
+   * @returns {void}
    */
-  closeForm = () => {
+  closeForm(): void {
     this.formMovieElement.reset();
 
     this.imagePreviewElement.src = '#';
@@ -350,32 +365,35 @@ class Movie {
     this.formMovieElement.classList.remove('card-loading');
 
     resetErrors(this.divFormMovieElement);
-  };
+  }
 
   /**
    * Add event for cancel button in form
+   * @returns {void}
    */
-  private addCloseFormMovie = () => {
+  private addCloseFormMovie(): void {
     this.cancelButtonFormElement.addEventListener('click', (event: MouseEvent) => {
       event.preventDefault();
 
       this.closeForm();
     });
-  };
+  }
 
   /**
    * Display form create movie.
+   * @returns
    */
-  displayCreateMovieForm = () => {
+  displayCreateMovieForm(): void {
     this.createMovieButtonElement.addEventListener('click', () => {
       this.displayFormMovie();
     });
-  };
+  }
 
   /**
    * Display form create movie.
+   * @returns {void}
    */
-  displayUpdateMovieForm = (handleShowMovieInForm: (movieId: number) => void) => {
+  displayUpdateMovieForm(handleShowMovieInForm: (movieId: number) => void): void {
     this.trendingElement = document.querySelector('.trending-movie') as HTMLElement;
     this.trendingMovieListElement = this.trendingElement.querySelectorAll<HTMLElement>('.card-img');
 
@@ -391,12 +409,13 @@ class Movie {
         }
       });
     });
-  };
+  }
 
   /**
    * Submit form movie.
+   * @returns {void}
    */
-  private checkMediaFileFormUpdate = () => {
+  private checkMediaFileFormUpdate(): void {
     const isDisplayImage = this.imagePreviewElement?.classList.contains('display-block');
     const isDisplayVideo = this.videoClosetElement?.classList.contains('display-block');
 
@@ -405,13 +424,14 @@ class Movie {
 
     if (this.videoElement && isDisplayVideo) this.videoElement.setAttribute('rules', '');
     else this.videoElement?.setAttribute('rules', 'required');
-  };
+  }
 
   /**
    * Submit form movie.
    * @param {Function} handleSubmit - The submit event function.
+   * @returns {void}
    */
-  getDataInMovieForm = (handleSubmit: (movie: IMovieOptionalField) => void) => {
+  getDataInMovieForm(handleSubmit: (movie: IMovieOptionalField) => void): void {
     if (!this.submitButtonFormElement) {
       return;
     }
@@ -440,12 +460,13 @@ class Movie {
 
       this.formMovieElement.classList.remove('card-loading');
     });
-  };
+  }
 
   /**
    * Close form movie when click outside form.
+   * @returns {void}
    */
-  private closeFormByClickOutSide = () => {
+  private closeFormByClickOutSide(): void {
     this.divFormMovieElement.addEventListener('click', (event: MouseEvent) => {
       const targetElement = event.target as HTMLElement;
 
@@ -453,12 +474,13 @@ class Movie {
         this.closeForm();
       }
     });
-  };
+  }
 
   /**
    * Add key down for form movie
+   * @returns {void}
    */
-  private addKeydownCloseFormMovie = () => {
+  private addKeydownCloseFormMovie(): void {
     document.addEventListener('keydown', (event) => {
       const isEscape = event.key === 'Escape' || event.keyCode === 27;
 
@@ -466,7 +488,7 @@ class Movie {
         this.closeForm();
       }
     });
-  };
+  }
 }
 
 export default Movie;

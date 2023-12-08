@@ -1,3 +1,3 @@
-type Path = '/' | '/favorites.html' | '/trending.html';
+type Path = '/' | '/favorites' | '/trending';
 
 export default Path;
