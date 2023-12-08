@@ -1,7 +1,7 @@
 const ROUTES = {
   homePage: '/',
-  favoritesPage: '/favorites.html',
-  trendingPage: '/trending.html',
+  favoritesPage: '/favorites',
+  trendingPage: '/trending',
 };
 
 export default ROUTES;

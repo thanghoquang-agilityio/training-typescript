@@ -1,8 +1,6 @@
 import stringHelper from './string';
 
 import {
-  FORM_INPUTS,
-  MEDIA_FILE_TYPE,
   VALIDATION_MESSAGES,
   MAX_SIZE_IMAGE,
   MAX_SIZE_VIDEO,
@@ -13,6 +11,7 @@ import {
 } from '@/constants';
 
 import { IMovie } from '@/interfaces';
+import { TypeOfMediaFile, TypeOfInput, ValidationFileCase, ValidationFormCase } from '@/types';
 
 /**
  * Set error for field.
@@ -83,22 +82,130 @@ const checkInvalidExtensionFile = (
 };
 
 /**
+ * Set validation file case
+ * @param {TypeOfMediaFile} type - type of file.
+ * @param {HTMLElement} form - The element form need be validated.
+ * @returns {ValidationFileCase}
+ */
+const setValidationInputMediaFile = (
+  type: TypeOfMediaFile,
+  form: HTMLElement,
+): ValidationFileCase => {
+  const ValidationFile = {
+    image: () => {
+      const validationFileCase: ValidationFileCase = {
+        isOverSize: checkInvalidSizeFile(form, type, MAX_SIZE_IMAGE),
+        isValidKind: checkInvalidExtensionFile(form, type, EXTENSIONS_IMAGE),
+      };
+
+      return validationFileCase;
+    },
+    video: () => {
+      const validationFileCase: ValidationFileCase = {
+        isOverSize: checkInvalidSizeFile(form, type, MAX_SIZE_VIDEO),
+        isValidKind: checkInvalidExtensionFile(form, type, EXTENSIONS_VIDEO),
+      };
+
+      return validationFileCase;
+    },
+  };
+
+  return ValidationFile[type]();
+};
+
+/**
+ * Validates input file in form
+ * @param {HTMLElement} form - The element form need be validated.
+ * @param {HTMLInputElement} input - The element input need be validated.
+ * @param {string[]} rules - The rules need validate
+ * @returns {string} error message
+ */
+const validateInputMediaFile = (
+  form: HTMLElement,
+  input: HTMLInputElement,
+  rules: string[],
+): string => {
+  const fieldName = stringHelper.convertSnakeToCapitalize(input.name);
+  const isRequired = input.files && !input.files.length && rules.includes('required');
+
+  if (isRequired) return VALIDATION_MESSAGES.required(fieldName);
+
+  const isValidation = rules.includes('required');
+  const validationFileCase = setValidationInputMediaFile(input.name as TypeOfMediaFile, form);
+  const isValidKind = validationFileCase.isValidKind;
+  const isOverSize = validationFileCase.isOverSize;
+
+  if (isValidation && !isValidKind) return VALIDATION_MESSAGES.invalidExtensionOfFile(fieldName);
+
+  if (isValidation && isOverSize) return VALIDATION_MESSAGES.invalidSizeOfFile(fieldName);
+
+  return '';
+};
+
+/**
+ * Validates input file in form
+ * @param {HTMLInputElement} input - The element input need be validated.
+ * @param {string[]} rules - The rules need validate
+ * @returns {string} error message
+ */
+const validateInputNumber = (input: HTMLInputElement, rules: string[]): string => {
+  const fieldName = stringHelper.convertSnakeToCapitalize(input.name);
+  const isRequired = !input.value.trim() && rules.includes('required');
+
+  if (isRequired) return VALIDATION_MESSAGES.required(fieldName);
+
+  const isValidNumber = checkInvalidYearRelease(input, MIN_YEAR, MAX_YEAR);
+
+  if (isValidNumber) return VALIDATION_MESSAGES.invalidNumber(fieldName, MIN_YEAR, MAX_YEAR);
+
+  return '';
+};
+
+/**
+ * Set validation form
+ * @param {TypeOfInput} type - type of input.
+ * @param {HTMLElement} form - The element form need be validated.
+ * @param {HTMLInputElement} input - The element input need be validated.
+ * @param {string[]} rules - The rules need validate
+ * @returns {string} error
+ */
+const setValidationForm = (
+  type: TypeOfInput,
+  form: HTMLElement,
+  input: HTMLInputElement,
+  rules: string[],
+): string => {
+  const ValidationForm = {
+    file: () => validateInputMediaFile(form, input, rules),
+    number: () => validateInputNumber(input, rules),
+    default: (): string => {
+      const fieldName = stringHelper.convertSnakeToCapitalize(input.name);
+      const isRequired = !input.value.trim() && rules.includes('required');
+
+      if (isRequired) {
+        return VALIDATION_MESSAGES.required(fieldName);
+      }
+
+      return '';
+    },
+  };
+
+  return ValidationForm[type as ValidationFormCase]
+    ? ValidationForm[type as ValidationFormCase]()
+    : ValidationForm.default();
+};
+
+/**
  * Validates if a field has a non-empty value.
  * @param {HTMLElement} form - The element form need be validated.
  * @returns {boolean}
  */
 const validateForm = (form: HTMLElement): boolean => {
-  const textareaList = form.querySelectorAll<HTMLInputElement>('textarea');
-  const inputList = form.querySelectorAll<HTMLInputElement>('input');
+  const textareaList = Array.from(form.querySelectorAll<HTMLInputElement>('textarea'));
+  const inputList = Array.from(form.querySelectorAll<HTMLInputElement>('input'));
   const errorList = form.querySelectorAll<HTMLElement>('.input-error');
-  let combinedList = [];
+  const combinedList = textareaList.length > 0 ? inputList.concat(textareaList) : inputList;
   let isValidData = true;
-
-  if (textareaList.length > 0) {
-    combinedList = Array.from(inputList).concat(Array.from(textareaList));
-  } else {
-    combinedList = Array.from(inputList);
-  }
 
   if (!combinedList.length) {
     return isValidData;
@@ -106,106 +213,17 @@ const validateForm = (form: HTMLElement): boolean => {
 
   combinedList.forEach((input, index) => {
     const rules = input.getAttribute('rules')?.split(',');
-    const field = input.name;
-    const fieldName = stringHelper.convertSnakeToCapitalize(field);
+    const type = input.type as TypeOfInput;
 
     if (!rules || !rules.length) {
       return isValidData;
     }
 
-    switch (input.type) {
-      case FORM_INPUTS.file: {
-        const isRequired = input.files && !input.files.length && rules.includes('required');
+    const error = setValidationForm(type, form, input, rules);
 
-        if (isRequired) {
-          setError(errorList[index], VALIDATION_MESSAGES.required(fieldName));
-
-          isValidData = false;
-          break;
-        }
-
-        let isOverSize = false;
-        let isValidTypeFile = false;
-        const isBypassValidation = rules.includes('required');
-
-        switch (field) {
-          case MEDIA_FILE_TYPE.image: {
-            isOverSize = checkInvalidSizeFile(form, MEDIA_FILE_TYPE.image, MAX_SIZE_IMAGE);
-
-            isValidTypeFile = checkInvalidExtensionFile(
-              form,
-              MEDIA_FILE_TYPE.image,
-              EXTENSIONS_IMAGE,
-            );
-
-            break;
-          }
-
-          case MEDIA_FILE_TYPE.video: {
-            isOverSize = checkInvalidSizeFile(form, MEDIA_FILE_TYPE.video, MAX_SIZE_VIDEO);
-
-            isValidTypeFile = checkInvalidExtensionFile(
-              form,
-              MEDIA_FILE_TYPE.video,
-              EXTENSIONS_VIDEO,
-            );
-
-            break;
-          }
-        }
-
-        if (isBypassValidation && !isValidTypeFile) {
-          setError(errorList[index], VALIDATION_MESSAGES.invalidExtensionOfFile(fieldName));
-
-          isValidData = false;
-          break;
-        }
-
-        if (isBypassValidation && isOverSize) {
-          setError(errorList[index], VALIDATION_MESSAGES.invalidSizeOfFile(fieldName));
-
-          isValidData = false;
-          break;
-        }
-
-        break;
-      }
-
-      case FORM_INPUTS.number: {
-        const isRequired = !input.value.trim() && rules.includes('required');
-
-        if (isRequired) {
-          setError(errorList[index], VALIDATION_MESSAGES.required(fieldName));
-
-          isValidData = false;
-          break;
-        }
-
-        const isValidNumber = checkInvalidYearRelease(input, MIN_YEAR, MAX_YEAR);
-
-        if (isValidNumber) {
-          setError(
-            errorList[index],
-            VALIDATION_MESSAGES.invalidNumber(fieldName, MIN_YEAR, MAX_YEAR),
-          );
-          isValidData = false;
-          break;
-        }
-
-        break;
-      }
-
-      case FORM_INPUTS.text:
-      case FORM_INPUTS.textarea: {
-        const isRequired = !input.value.trim() && rules.includes('required');
-
-        if (isRequired) {
-          setError(errorList[index], VALIDATION_MESSAGES.required(fieldName));
-          isValidData = false;
-        }
-
-        break;
-      }
+    if (error) {
+      setError(errorList[index], error);
+      isValidData = false;
     }
   });
 
